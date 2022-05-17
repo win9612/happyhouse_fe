@@ -15,18 +15,7 @@
             </i>
           </a>
 
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarColor03"
-            aria-controls="navbarColor03"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarColor03">
+          <div class="collapse navbar-collapse me-2" id="navbarColor03">
             <ul class="navbar-nav me-auto">
               <li class="nav-item">
                 <a class="nav-link active" href="#"
@@ -39,13 +28,10 @@
               </li>
             </ul>
             <div id="login-banner">
-              <a href="./login.html" class="btn btn-primary" type="submit"
+              <a href="./login" class="btn btn-primary me-2" type="submit"
                 >로그인</a
               >
-              <a
-                href="./regist.html"
-                class="btn btn-outline-primary"
-                type="submit"
+              <a href="./regist" class="btn btn-outline-primary" type="submit"
                 >회원가입</a
               >
             </div>
@@ -64,32 +50,26 @@
     </header>
 
     <main>
-      <div class="search-bar d-flex">
-        <div class="input-box">
-          <input
-            id="search-text"
-            type="text"
-            placeholder="동 또는 아파트 이름으로 검색"
-            class="form-control"
-          />
-          <!-- <div id="search" class="btn btn-primary">
-            <i class="fa-solid fa-search"></i>
-          </div> -->
-        </div>
-        <!-- <div class="select-box d-flex">
-          <select name="sido" id="sido" class="form-select"></select>
-          <select name="gugun" id="gugun" class="form-select">
-            <option value="">구군선택</option>
-          </select>
-          <select name="dong" id="dong" class="form-select">
-            <option value="">동선택</option>
-          </select>
-        </div> -->
-      </div>
       <div class="d-flex h-100">
         <aside class="side-menu">
-          <div class="title fw-bold fs-5 pt-2 pb-2">결과들</div>
-          <div class="item-list"></div>
+          <div class="search-bar d-flex">
+            <div class="input-box">
+              <input
+                id="search-text"
+                type="text"
+                placeholder="동 또는 아파트 이름으로 검색"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="title fw-bold fs-5 pt-2 pb-2">
+            검색 이전 히든처리 여긴 필터들어갈자리
+          </div>
+          <div class="item-list">
+            <div class="item">
+              <div class="item-title">item title</div>
+            </div>
+          </div>
         </aside>
         <div class="map-box bg-light h-100 w-100 min-width:1200px">
           <Map />
@@ -141,11 +121,13 @@ html {
 
 .service-container {
   height: 100%;
+  width: 100%;
+  min-width: 1280px;
 }
 
 main {
   position: relative;
-  height: calc(100% - 127.19px);
+  height: calc(100% - 56px);
 }
 
 .side-menu {
@@ -156,21 +138,20 @@ main {
 }
 
 .search-bar {
-  padding: 10px 0;
-  border-bottom: 1px solid #e0e0e0;
+  box-sizing: border-box;
+  /* border-bottom: 1px solid #e0e0e0; */
   /* border-top: 1px solid #e0e0e0; */
 }
 
 .input-box {
-  margin-left: 10px;
-  width: 400px;
+  width: 90%;
   min-width: 400px;
   display: flex;
 }
 
-.input-box input[type="text"] {
-  width: 77%;
-  margin-right: 10px;
+#search-text {
+  margin-bottom: 0;
+  border-radius: 0;
 }
 
 .title {
@@ -179,8 +160,10 @@ main {
 }
 
 .item-list {
-  height: calc(100% - 47px);
+  height: calc(100% - 117px);
   overflow-y: scroll;
+  /* overflow: hidden; */
+  /* 선택자::-webkit-scrollbar */
 }
 
 .item {
@@ -232,11 +215,6 @@ select[name="gugun"] {
   right: 10px;
   z-index: 100;
   border: 1px solid #8d8d8d;
-}
-.custom_typecontrol div {
-}
-.custom_typecontrol .btn {
-  /* width: 90px; */
 }
 
 .custom_typecontrol #btnRoadmap {

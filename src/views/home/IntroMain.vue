@@ -12,7 +12,7 @@
           레이아웃이 잡힐거 같다 나중에 채우자
         </div>
         <div class="btn-box d-grid gap-2 text-start">
-          <a class="btn btn-primary">조회하기</a>
+          <a href="./service" class="btn btn-primary">조회하기</a>
         </div>
       </div>
 

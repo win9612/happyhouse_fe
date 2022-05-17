@@ -72,7 +72,11 @@ export default {
       passwordConfirm: "",
     };
   },
-  methods: {},
+  methods: {
+    regist: function () {
+      console.log("hh");
+    },
+  },
 };
 </script>
 

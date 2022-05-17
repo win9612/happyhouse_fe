@@ -2,7 +2,7 @@
   <header class="">
     <nav class="navbar navbar-expand-lg navbar-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">HAPPY HOUSE</a>
+        <a class="navbar-brand" href="/">HAPPY HOUSE</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -18,7 +18,7 @@
         <div class="collapse navbar-collapse" id="navbarColor03">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <a class="nav-link" href="./about">공지사항 </a>
+              <a class="nav-link" href="./notice">공지사항 </a>
             </li>
             <li class="nav-item float-end">
               <a class="nav-link" href="./service">매물조회</a>
