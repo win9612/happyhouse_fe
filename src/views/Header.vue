@@ -20,6 +20,9 @@
             <li class="nav-item">
               <a class="nav-link" href="./notice">공지사항 </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./qna-board">QnA </a>
+            </li>
             <li class="nav-item float-end">
               <a class="nav-link" href="./service">매물조회</a>
             </li>
