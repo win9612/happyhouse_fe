@@ -3,7 +3,6 @@
   <div id="map" style="width: 100%; min-width: 1200px; height: 100%"></div>
 </template>
 
-<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 <script>
 import axios from "axios";
 
@@ -23,20 +22,20 @@ export default {
     initMap() {
       const container = document.getElementById("map");
       const options = {
-        center: new kakao.maps.LatLng(37.4898434, 127.0438136),
+        center: new window.kakao.maps.LatLng(37.4976537, 127.0467951),
         level: 5,
       };
-      this.map = new kakao.maps.Map(container, options);
+      this.map = new window.kakao.maps.Map(container, options);
 
       var _this = this;
 
-      this.mapcoder = new kakao.maps.services.Geocoder();
+      this.mapcoder = new window.kakao.maps.services.Geocoder();
       // mapcoder에서 좌표 값 받아와서 넣야아함 임시로 고정값 넣어둠
-      let coord = new kakao.maps.LatLng(37.6898334, 127.0438136);
+      let coord = new window.kakao.maps.LatLng(37.4976537, 127.0467951);
 
       // 좌표값으로 주소 구해서 반환받으면실행도리 콜백함수
       let callback = function (result, status) {
-        if (status === kakao.maps.services.Status.OK) {
+        if (status === window.kakao.maps.services.Status.OK) {
           _this.currentDong = result[0].address.region_3depth_name;
           // 콜백받은거 결과 ok이면 그 동 주소로 아파트 목록 조회
           _this.getAptList();
@@ -74,15 +73,61 @@ export default {
       });
     },
     // 시 / 구군 / 동 마커 생성 함수
-    createOverlay() {},
+    createOverlay() {
+      console.log("overlay");
+      let map = this.map;
+      // let content = `<div class ="location-label">여기야!</div>`;
+      // let position = new window.kakao.maps.LatLng(37.4976537, 127.0467951);
+
+      let positions = [
+        {
+          title: `<div class ="location-label">여기야!</div>`,
+          latlng: new window.kakao.maps.LatLng(37.4976537, 127.0447951),
+        },
+        {
+          title: `<div class ="location-label">여기야!</div>`,
+          latlng: new window.kakao.maps.LatLng(37.4976537, 127.0427951),
+        },
+        {
+          title: `<div class ="location-label">여기야!</div>`,
+          latlng: new window.kakao.maps.LatLng(37.4976537, 127.0407951),
+        },
+      ];
+      let overlays = [];
+      for (let i = 0; i < positions.length; i++) {
+        var customOverlay = new window.kakao.maps.CustomOverlay({
+          position: positions[i].latlng,
+          content: positions[i].title,
+        });
+        overlays.push(customOverlay);
+        customOverlay.setMap(map);
+      }
+
+      var clusterer = new window.kakao.maps.MarkerClusterer({
+        map: map,
+        averageCenter: true,
+        minLevel: 5,
+      });
+      console.log(overlays);
+
+      clusterer.addMarkers(overlays);
+    },
   },
   mounted() {
-    const script = document.createElement("script");
-    script.onload = () => kakao.maps.load(this.initMap);
-    script.src =
-      "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=30041c6cf346d6570de69946bbbbae60&libraries=services";
-    document.head.appendChild(script);
+    let _this = this;
+    window.kakao.maps.load(function () {
+      _this.initMap();
+      _this.createOverlay();
+    });
     this.geofind();
   },
 };
 </script>
+
+<style>
+.location-label {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 4px;
+}
+</style>
