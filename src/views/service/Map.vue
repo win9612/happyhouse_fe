@@ -16,46 +16,58 @@ export default {
       lng: "",
       textContent: "",
       mapcoder: "",
+      currentDong: "",
     };
   },
   methods: {
     initMap() {
       const container = document.getElementById("map");
       const options = {
-        center: new kakao.maps.LatLng(36.2942802, 127.339534),
+        center: new kakao.maps.LatLng(37.4898434, 127.0438136),
         level: 5,
       };
       this.map = new kakao.maps.Map(container, options);
 
+      var _this = this;
+
       this.mapcoder = new kakao.maps.services.Geocoder();
-      let coord = new kakao.maps.LatLng(this.lat, this.lng);
+      let coord = new kakao.maps.LatLng(37.4898434, 127.0438136);
 
       let callback = function (result, status) {
         if (status === kakao.maps.services.Status.OK) {
-          console.log(result);
+          _this.currentDong = result[0].address.region_3depth_name;
+          _this.getAptList();
         }
       };
       this.mapcoder.coord2Address(coord.getLng(), coord.getLat(), callback);
     },
     geofind() {
       if (!("geolocation" in navigator)) {
-        this.textContent = "Geolocation is not available";
+        this.textContent = "지오로케이션 못불러온는중";
         return;
       }
-      this.textContent = "Locating...";
+      this.textContent = "위치 구하는중 이게 뜨면 비동기 잘못짠거다";
 
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           this.lat = pos.coords.latitude;
           this.lng = pos.coords.longitude;
-          this.textContent =
-            "Your location data is " + this.lat + ", " + this.lng;
-          console.log(this.textContent);
+          this.textContent = "위치정보 : " + this.lat + ", " + this.lng;
         },
         (err) => {
           this.textContent = err.message;
         }
       );
+    },
+    getAptList() {
+      var dong = this.currentDong;
+      var _this = this;
+      axios({
+        url: "http://127.0.0.1:8080/apt-search/apt?keyword=" + dong,
+        method: "get",
+      }).then(function (res) {
+        console.log(res);
+      });
     },
   },
   mounted() {
