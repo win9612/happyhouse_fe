@@ -66,9 +66,11 @@
             검색 이전 히든처리 여긴 필터들어갈자리
           </div>
           <div class="item-list">
-            <div class="item">
-              <div class="item-title">item title</div>
+            <div class="item" v-for="(item, index) in aptList" :key="index">
+              <div class="item-title">{{ item.aptName }}</div>
+              <div>{{ item }}</div>
             </div>
+            {{ aptList }}
           </div>
         </aside>
         <div class="map-box bg-light h-100 w-100 min-width:1200px">
@@ -109,6 +111,21 @@ export default {
   name: "Service",
   components: {
     Map,
+  },
+  data() {
+    return {
+      aptList: this.$store.state.aptList,
+    };
+  },
+  computed: {
+    checkAptList() {
+      return this.$store.getters.getAptList;
+    },
+  },
+  watch: {
+    checkAptList(val) {
+      this.aptList = val;
+    },
   },
 };
 </script>

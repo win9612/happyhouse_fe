@@ -67,6 +67,7 @@ export default {
         method: "get",
       }).then(function (res) {
         console.log(res);
+        _this.$store.dispatch("setAptList", { newList: res.data });
       });
     },
   },
