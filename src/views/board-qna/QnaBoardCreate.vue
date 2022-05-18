@@ -74,11 +74,14 @@ export default {
         return;
       }
 
+      this.bContent = this.bContent.replace(/(\n|\r\n)/g, "<br>");
+
       http
         .post(`/qna-board/add`, this.setParams)
         .then((resp) => {
           console.log(resp);
           alert("성공적으로 등록되었습니다.");
+          this.$router.push({ name: "QnaBoardList" });
         })
         .catch((resp) => {
           alert("등록에 실패했습니다. \n에러메시지: " + resp);
