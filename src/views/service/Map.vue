@@ -31,11 +31,14 @@ export default {
       var _this = this;
 
       this.mapcoder = new kakao.maps.services.Geocoder();
-      let coord = new kakao.maps.LatLng(37.4898434, 127.0438136);
+      // mapcoder에서 좌표 값 받아와서 넣야아함 임시로 고정값 넣어둠
+      let coord = new kakao.maps.LatLng(37.6898334, 127.0438136);
 
+      // 좌표값으로 주소 구해서 반환받으면실행도리 콜백함수
       let callback = function (result, status) {
         if (status === kakao.maps.services.Status.OK) {
           _this.currentDong = result[0].address.region_3depth_name;
+          // 콜백받은거 결과 ok이면 그 동 주소로 아파트 목록 조회
           _this.getAptList();
         }
       };
@@ -66,10 +69,12 @@ export default {
         url: "http://127.0.0.1:8080/apt-search/apt?keyword=" + dong,
         method: "get",
       }).then(function (res) {
-        console.log(res);
+        // 아파트 목록 받아왔으면 vuex에 저장
         _this.$store.dispatch("setAptList", { newList: res.data });
       });
     },
+    // 시 / 구군 / 동 마커 생성 함수
+    createOverlay() {},
   },
   mounted() {
     const script = document.createElement("script");

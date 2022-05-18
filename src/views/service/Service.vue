@@ -59,7 +59,9 @@
                 type="text"
                 placeholder="동 또는 아파트 이름으로 검색"
                 class="form-control"
+                @input="search($event)"
               />
+              <!-- <div class="search-result">123123</div> -->
             </div>
           </div>
           <div class="title fw-bold fs-5 pt-2 pb-2">
@@ -105,6 +107,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import Map from "./Map.vue";
 
 export default {
@@ -117,6 +120,42 @@ export default {
       aptList: this.$store.state.aptList,
     };
   },
+  methods: {
+    search: function (e) {
+      let str = e.target.value;
+
+      let last = str.charAt(str.length - 1);
+
+      let _this = this;
+
+      // 동으로 아파트 목록 검색
+      if (last == "동") {
+        axios({
+          url: "http://127.0.0.1:8080/apt-search/apt?keyword=" + e.target.value,
+          method: "get",
+        }).then(function (res) {
+          console.log(res);
+          _this.$store.state.aptList = res.data;
+        });
+
+        // 동인경우 지도 위치도 이동시키자
+        // 여기다가 나중에 함수호출해서 기능 추가 예정
+      } else {
+        // 동이 아닌 아파트 이름으로 아파트 검색
+        // 이건 지도 이동 안하고 여러지역의 동일한 키워드를
+        // 포함한 아파트 목록 표시해주기
+        axios({
+          url:
+            "http://127.0.0.1:8080/apt-search/aptName?keyword=" +
+            e.target.value,
+          method: "get",
+        }).then(function (res) {
+          _this.$store.state.aptList = res.data;
+        });
+      }
+    },
+  },
+  // vuex 값이 변경되면 aptList 갱신
   computed: {
     checkAptList() {
       return this.$store.getters.getAptList;
@@ -169,6 +208,14 @@ main {
 #search-text {
   margin-bottom: 0;
   border-radius: 0;
+}
+
+.search-result {
+  border: 2px solid red;
+  position: absolute;
+  width: 400px;
+  height: 200px;
+  margin-top: 60px;
 }
 
 .title {
