@@ -30,23 +30,20 @@ export default {
   data() {
     return {
       bNo: "", // query로부터 받아올 게시글 번호
-      article: {
-        bNo: 3,
-        bWriterEmail: "hong123@naver.com",
-        bWriterName: "강호동",
-        bTitle: "세 번째 글의 제목 ><<<<",
-        bContent: "내용입니다. 내용",
-        bHits: 333,
-        bWriteDate: "2022-05-19 14:50:20",
-      },
+      article: {},
     };
   },
   created() {
     this.bNo = this.$route.query.bno; // 현재 게시글 번호 받기
-    http.get(`/map/sido`).then(({ data }) => {
-      console.log(data);
-      //this.artlcle = data;
-    });
+    http
+      .get(`/qna-board/getOne`, {
+        params: {
+          bNo: this.bNo,
+        },
+      })
+      .then(({ data }) => {
+        this.article = data;
+      });
   },
   methods: {
     moveList() {

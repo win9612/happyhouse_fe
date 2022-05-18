@@ -19,49 +19,29 @@
 </template>
 
 <script>
+import http from "../util/http-common.js";
+
 export default {
   name: "QnaBoardList",
   data() {
     return {
       // 더미 데이터 (axios해서 받아올 것!)
-      qnaBoard: [
-        {
-          bNo: 1,
-          bWriterEmail: "hong123@naver.com",
-          bWriterName: "홍길동",
-          bTitle: "제목입니다",
-          bContent: "내용입니다. 내용",
-          bHits: 0,
-          bWriteDate: "2022-05-18 11:50:20",
-        },
-        {
-          bNo: 2,
-          bWriterEmail: "hong123@naver.com",
-          bWriterName: "유재석",
-          bTitle: "두 번째 글의 제목2222",
-          bContent: "내용입니다. 내용",
-          bHits: 333,
-          bWriteDate: "2022-05-19 13:50:20",
-        },
-        {
-          bNo: 3,
-          bWriterEmail: "hong123@naver.com",
-          bWriterName: "강호동",
-          bTitle: "세 번째 글의 제목 ><<<<",
-          bContent: "내용입니다. 내용",
-          bHits: 333,
-          bWriteDate: "2022-05-19 14:50:20",
-        },
-      ],
+      qnaBoard: [],
     };
   },
   created() {
     // QnaBoard를 axios로 받아옴
-
-    // 게시글을 bNo 역순으로 정렬
-    this.qnaBoard.sort((a, b) => {
-      return b.bNo - a.bNo;
-    });
+    http
+      .get(`/qna-board/getList`)
+      .then(({ data }) => {
+        this.qnaBoard = data;
+      })
+      .then(() => {
+        // 게시글을 bNo 역순으로 정렬
+        this.qnaBoard.sort((a, b) => {
+          return b.bNo - a.bNo;
+        });
+      });
   },
   methods: {
     moveDetail(bNo) {
