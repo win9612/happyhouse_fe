@@ -6,9 +6,10 @@
         <span>작성자 : {{ article.bWriterName }}</span> |
         <span>{{ article.bWriteDate }}</span>
       </div>
-      <div class="article_content mb-3 pt-3 pb-3 border">
-        {{ article.bContent }}
-      </div>
+      <div
+        class="article_content mb-3 pt-3 pb-3 border"
+        v-html="article.bContent"
+      ></div>
     </div>
     <div align="center" class="menu_bar mb-1 row">
       <div class="d col-4">
@@ -21,11 +22,13 @@
         <button class="btn btn-danger" @click="deleteArticle">글 삭제</button>
       </div>
     </div>
+    <QnaCommentVue />
   </div>
 </template>
 
 <script>
 import http from "../util/http-common.js";
+import QnaCommentVue from "./QnaComment.vue";
 export default {
   data() {
     return {
@@ -63,6 +66,9 @@ export default {
         });
       }
     },
+  },
+  components: {
+    QnaCommentVue,
   },
 };
 </script>
