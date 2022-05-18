@@ -8,6 +8,7 @@ import Notice from "../views/notice/Notice.vue";
 import NoticeDetail from "../views/notice/NoticeDetail.vue";
 import NoticeList from "../views/notice/NoticeList.vue";
 
+import QnaBoard from "../views/board-qna/QnaBoard.vue";
 import QnaBoardDetail from "../views/board-qna/QnaBoardDetail.vue";
 import QnaBoardCreate from "../views/board-qna/QnaBoardCreate.vue";
 import QnaBoardDelete from "../views/board-qna/QnaBoardDelete.vue";
@@ -57,26 +58,32 @@ const routes = [
   },
   {
     path: "/qna-board",
-    name: "QnaBoardList",
-    component: QnaBoardList,
+    name: "QnaBoard",
+    component: QnaBoard,
+    redirect: "/qna-board/list",
     children: [
+      {
+        path: "list",
+        name: "QnaBoardList",
+        component: QnaBoardList,
+      },
       {
         path: "create",
         name: "QnaBoardCreate",
         component: QnaBoardCreate,
       },
       {
-        path: "detail/:articleno",
+        path: "detail",
         name: "QnaBoardDetail",
         component: QnaBoardDetail,
       },
       {
-        path: "modify/:articleno",
+        path: "modify",
         name: "QnaBoardModify",
         component: QnaBoardModify,
       },
       {
-        path: "delete/:articleno",
+        path: "delete",
         name: "QnaBoardDelete",
         component: QnaBoardDelete,
       },
