@@ -4,13 +4,11 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 import houseStore from "./modules/houseStore";
-import authStore from "./modules/authStore";
 import createPersistedState from "vuex-persistedstate";
 
 const store = new Vuex.Store({
   modules: {
     house: houseStore,
-    auth: authStore,
   },
   plugins: [
     createPersistedState({
