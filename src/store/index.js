@@ -3,24 +3,19 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
-  state: {
-    aptList: "",
+import houseStore from "./modules/houseStore";
+import createPersistedState from "vuex-persistedstate";
+
+const store = new Vuex.Store({
+  modules: {
+    houseStore,
   },
-  mutations: {
-    changeAptList(state, newList) {
-      state.aptList = newList;
-    },
-  },
-  actions: {
-    setAptList({ commit }, { newList }) {
-      commit("changeAptList", newList);
-    },
-  },
-  getters: {
-    getAptList(state) {
-      return state.aptList;
-    },
-  },
-  modules: {},
+  plugins: [
+    createPersistedState({
+      // 브라우저 종료시 제거하기 위해 localStorage가 아닌 sessionStorage로 변경. (default: localStorage)
+      storage: sessionStorage,
+    }),
+  ],
 });
+
+export default store;
