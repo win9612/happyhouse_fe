@@ -117,7 +117,7 @@ export default {
   },
   data() {
     return {
-      aptList: this.$store.state.aptList,
+      aptList: this.$store.state.house.aptList,
     };
   },
   methods: {
@@ -135,7 +135,7 @@ export default {
           method: "get",
         }).then(function (res) {
           console.log(res);
-          _this.$store.state.aptList = res.data;
+          _this.$store.state.house.aptList = res.data;
         });
 
         // 동인경우 지도 위치도 이동시키자
@@ -150,7 +150,7 @@ export default {
             e.target.value,
           method: "get",
         }).then(function (res) {
-          _this.$store.state.aptList = res.data;
+          _this.$store.state.house.aptList = res.data;
         });
       }
     },
@@ -158,7 +158,7 @@ export default {
   // vuex 값이 변경되면 aptList 갱신
   computed: {
     checkAptList() {
-      return this.$store.getters.getAptList;
+      return this.$store.state.house.aptList;
     },
   },
   watch: {
