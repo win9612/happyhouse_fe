@@ -8,7 +8,7 @@ import createPersistedState from "vuex-persistedstate";
 
 const store = new Vuex.Store({
   modules: {
-    houseStore,
+    house: houseStore,
   },
   plugins: [
     createPersistedState({

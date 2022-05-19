@@ -69,7 +69,7 @@ export default {
         method: "get",
       }).then(function (res) {
         // 아파트 목록 받아왔으면 vuex에 저장
-        _this.$store.dispatch("setAptList", { newList: res.data });
+        _this.$store.dispatch("house/setAptList", { newList: res.data });
       });
     },
     // 시 / 구군 / 동 마커 생성 함수
