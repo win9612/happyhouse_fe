@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import http from "../util/http-common.js";
+import http from "../../api/http-common";
 export default {
   created() {
     let bNo = this.$route.query.bno;

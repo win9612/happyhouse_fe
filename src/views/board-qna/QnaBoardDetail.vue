@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import http from "../util/http-common.js";
+import http from "../../api/http-common";
 import QnaCommentVue from "./QnaComment.vue";
 export default {
   data() {

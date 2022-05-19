@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import http from "../util/http-common.js";
+import http from "../../api/http-common";
 export default {
   data() {
     return {
