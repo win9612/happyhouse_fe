@@ -62,6 +62,8 @@
 </template>
 
 <script>
+import http from "../../api/http-common";
+
 export default {
   name: "Regist",
   data() {
@@ -74,7 +76,27 @@ export default {
   },
   methods: {
     regist: function () {
-      console.log("hh");
+      if (
+        this.email.trim() == "" ||
+        this.password.trim() == "" ||
+        this.name.trim() == ""
+      ) {
+        alert("정보를 모두 입력해주세요");
+      } else {
+        http.post("/app/account/regist", this.setParams).then(function (res) {
+          console.log(res);
+        });
+      }
+    },
+  },
+  computed: {
+    setParams() {
+      let form = {
+        email: this.email,
+        password: this.password,
+        name: this.name,
+      };
+      return form;
     },
   },
 };

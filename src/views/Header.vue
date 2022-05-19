@@ -18,16 +18,16 @@
         <div class="collapse navbar-collapse" id="navbarColor03">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <a class="nav-link" href="./notice">공지사항 </a>
+              <a class="nav-link" href="/notice">공지사항 </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./qna-board">QnA </a>
+              <a class="nav-link" href="/qna-board">QnA </a>
             </li>
             <li class="nav-item float-end">
-              <a class="nav-link" href="./service">매물조회</a>
+              <a class="nav-link" href="/service">매물조회</a>
             </li>
             <li v-if="isLogin" class="nav-item float-end">
-              <a class="nav-link" href="#">내 정보</a>
+              <a class="nav-link" href="/profile">내 정보</a>
             </li>
           </ul>
           <div class="d-flex ms-4">
@@ -68,13 +68,14 @@ export default {
   },
   methods: {
     logout: function () {
-      sessionStorage.removeItem("jwt");
+      localStorage.removeItem("jwt");
       this.isLogin = false;
+      location.href = "/";
     },
   },
   created: function () {
     // 스토리지에 jwt가 있는지에 따라 로그인 여부 판단
-    const token = sessionStorage.getItem("jwt");
+    const token = localStorage.getItem("jwt");
     if (token) {
       this.isLogin = true;
     }
