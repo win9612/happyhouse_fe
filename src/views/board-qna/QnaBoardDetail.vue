@@ -3,8 +3,11 @@
     <div class="article mt-5">
       <div class="article_title mb-3 pb-3 border-bottom">
         <h3>{{ article.bTitle }}</h3>
-        <span>작성자 : {{ article.bWriterName }}</span> |
-        <span>{{ article.bWriteDate }}</span>
+        <span
+          >작성자 : <strong>{{ article.bWriterName }}</strong></span
+        >
+        &nbsp;|&nbsp;
+        <span style="color: gray">{{ article.bWriteDate }}</span>
       </div>
       <div
         class="article_content mb-3 pt-3 pb-3 border"
@@ -22,7 +25,7 @@
         <button class="btn btn-danger" @click="deleteArticle">글 삭제</button>
       </div>
     </div>
-    <QnaCommentVue />
+    <QnaCommentVue :bno="parseInt(bNo)" />
   </div>
 </template>
 
@@ -38,17 +41,20 @@ export default {
   },
   created() {
     this.bNo = this.$route.query.bno; // 현재 게시글 번호 받기
-    http
-      .get(`/qna-board/getOne`, {
-        params: {
-          bNo: this.bNo,
-        },
-      })
-      .then(({ data }) => {
-        this.article = data;
-      });
+    this.getArticleData();
   },
   methods: {
+    getArticleData() {
+      http
+        .get(`/qna-board/getOne`, {
+          params: {
+            bNo: this.bNo,
+          },
+        })
+        .then(({ data }) => {
+          this.article = data;
+        });
+    },
     moveList() {
       this.$router.push({ name: "QnaBoardList" });
     },
