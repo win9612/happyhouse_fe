@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import http from "../../api/http-common";
 
 export default {
   name: "Login",
@@ -65,21 +65,13 @@ export default {
         return;
       }
 
-      axios({
-        url: "http://127.0.0.1:8080/app/auth/login",
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: {
+      http
+        .post("/app/auth/login", {
           email: this.email,
           password: this.password,
-        },
-      })
+        })
         .then(function (res) {
-          // 세션스토리지에 토큰 저장
-          sessionStorage.setItem("jwt", JSON.stringify(res.data.result));
-          // index로 이동
+          localStorage.setItem("jwt", JSON.stringify(res.data.result));
           location.href = "/";
         })
         .catch(function (err) {

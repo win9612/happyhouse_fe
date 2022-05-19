@@ -14,6 +14,7 @@ import QnaBoardCreate from "../views/board-qna/QnaBoardCreate.vue";
 import QnaBoardDelete from "../views/board-qna/QnaBoardDelete.vue";
 import QnaBoardList from "../views/board-qna/QnaBoardList.vue";
 import QnaBoardModify from "../views/board-qna/QnaBoardModify.vue";
+import Profile from "../views/auth/Profile.vue";
 
 Vue.use(VueRouter);
 
@@ -35,6 +36,11 @@ const routes = [
     meta: {
       unauthorized: true,
     },
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
   },
   {
     path: "/service",
