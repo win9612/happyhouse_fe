@@ -68,13 +68,13 @@ export default {
   },
   methods: {
     logout: function () {
-      sessionStorage.removeItem("jwt");
+      localStorage.removeItem("jwt");
       this.isLogin = false;
     },
   },
   created: function () {
     // 스토리지에 jwt가 있는지에 따라 로그인 여부 판단
-    const token = sessionStorage.getItem("jwt");
+    const token = localStorage.getItem("jwt");
     if (token) {
       this.isLogin = true;
     }
