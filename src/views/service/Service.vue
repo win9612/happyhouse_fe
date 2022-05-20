@@ -129,7 +129,7 @@ export default {
       let _this = this;
 
       // 동으로 아파트 목록 검색
-      if (last == "동") {
+      if (last == "동" || last == "가") {
         axios({
           url: "http://127.0.0.1:8080/apt-search/apt?keyword=" + e.target.value,
           method: "get",
