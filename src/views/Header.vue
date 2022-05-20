@@ -42,12 +42,12 @@
             </span>
             <span v-else>
               <a
-                href="./login"
+                href="/login"
                 class="btn btn-outline-primary me-3"
                 type="submit"
                 >로그인</a
               >
-              <a href="./regist" class="btn btn-primary" type="submit"
+              <a href="/regist" class="btn btn-primary" type="submit"
                 >회원가입</a
               >
             </span>
