@@ -19,10 +19,14 @@
         <button class="btn btn-primary" @click="moveList">목록</button>
       </div>
       <div class="d col-4">
-        <button class="btn btn-info" @click="moveModify">글 수정</button>
+        <button class="btn btn-info" v-if="ableModify" @click="moveModify">
+          글 수정
+        </button>
       </div>
       <div class="d col-4">
-        <button class="btn btn-danger" @click="deleteArticle">글 삭제</button>
+        <button class="btn btn-danger" v-if="ableDelete" @click="deleteArticle">
+          글 삭제
+        </button>
       </div>
     </div>
     <QnaCommentVue :bno="parseInt(bNo)" />
@@ -36,14 +40,33 @@ export default {
   data() {
     return {
       bNo: "", // query로부터 받아올 게시글 번호
-      article: {},
+      article: {}, // 게시글 정보
+      browsingUserEmail: "",
+      ableModify: false,
+      ableDelete: false,
     };
   },
-  created() {
+  created: async function () {
     this.bNo = this.$route.query.bno; // 현재 게시글 번호 받기
-    this.getArticleData();
+    await this.getArticleData();
+    await this.checkLoginInfo();
   },
   methods: {
+    checkLoginInfo() {
+      http
+        .get(`/app/account/profile`)
+        .then(({ data }) => {
+          this.browsingUserEmail = data.email;
+          if (this.browsingUserEmail !== this.article.bWriterEmail) {
+            return;
+          }
+          this.ableModify = true;
+          this.ableDelete = true;
+        })
+        .catch((resp) => {
+          console.log(resp); // ISSUE
+        });
+    },
     getArticleData() {
       http
         .get(`/qna-board/getOne`, {
@@ -68,7 +91,7 @@ export default {
       if (confirm("정말로 삭제하시겠습니까?")) {
         this.$router.replace({
           name: "QnaBoardDelete",
-          query: { bno: this.bNo },
+          query: { bno: this.bNo, browsingUserEmail: this.browsingUserEmail },
         });
       }
     },

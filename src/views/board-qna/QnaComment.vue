@@ -2,7 +2,7 @@
   <div>
     <h3>답변</h3>
     <hr />
-    <div class="row">
+    <div id="write_form" class="row" v-if="ableWrite">
       <textarea
         id="c-content-form"
         class="form-control col"
@@ -28,6 +28,7 @@
         <span
           :id="item.cNo"
           style="color: red; cursor: pointer"
+          v-if="cWriterEmail === item.cWriterEmail"
           @click="deleteComment($event.target.id)"
           >삭제</span
         >
@@ -48,9 +49,14 @@ export default {
       commentList: [],
       bNo: this.bno,
       cContent: "",
-      cWriterName: "테스트계정",
-      cWriterEmail: "mingyu1218@naver.com",
+      cWriterName: "",
+      cWriterEmail: "",
+      ableWrite: false,
+      browsingUserEmail: "",
     };
+  },
+  created() {
+    this.checkLoginInfo();
   },
   props: {
     bno: {
@@ -59,6 +65,18 @@ export default {
     },
   },
   methods: {
+    checkLoginInfo: function () {
+      http
+        .get(`/app/account/profile`)
+        .then(({ data }) => {
+          this.ableWrite = true;
+          this.cWriterName = data.name;
+          this.cWriterEmail = data.email;
+        })
+        .catch((resp) => {
+          console.log(resp); // ISSUE
+        });
+    },
     getCommentList: function () {
       http
         .get(`/qna-comment/getList`, {
@@ -68,6 +86,7 @@ export default {
         })
         .then(({ data }) => {
           this.commentList = data;
+          console.log(data);
         })
         .then(() => {
           this.commentList.sort((a, b) => {

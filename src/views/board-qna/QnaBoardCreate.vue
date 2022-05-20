@@ -2,12 +2,14 @@
   <div id="app">
     <div class="input_form mt-5">
       <input
+        disabled
         type="text"
         class="mb-3 w-100"
         v-model="bWriterEmail"
         placeholder="이메일"
       /><br />
       <input
+        disabled
         type="text"
         class="mb-3 w-100"
         v-model="bWriterName"
@@ -54,6 +56,23 @@ export default {
       };
       return form;
     },
+  },
+  created() {
+    http
+      .get(`/app/account/profile`)
+      .then(({ data }) => {
+        if (data.email === null || data.email.length < 1) {
+          alert("로그인 후 글 작성이 가능합니다.");
+          this.$router.push({ name: "QnaBoardList" });
+        }
+
+        this.bWriterEmail = data.email;
+        this.bWriterName = data.name;
+      })
+      .catch(() => {
+        alert("비정상적인 접근입니다.");
+        this.$router.push({ name: "QnaBoardList" });
+      });
   },
   methods: {
     moveList() {

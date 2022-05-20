@@ -1,6 +1,8 @@
 <template>
   <div>
-    <button class="btn btn-primary" @click="moveWrite()">글쓰기</button>
+    <button class="btn btn-primary" v-if="ableWrite" @click="moveWrite()">
+      글쓰기
+    </button>
 
     <!-- 게시판 element 시작 -->
     <section class="board_container mb-5">
@@ -61,12 +63,24 @@ export default {
       totalPage: 0,
       qnaBoard: [], // 게시글 목록
       pageNavigation: [], // 페이지 내비게이션 목록
+      ableWrite: false, // 글쓰기 사용가능 여부
     };
   },
   created() {
+    this.getLoginInfo();
     this.getArticleList();
+    //let userInfo = localStorage.getItem("jwt");
+    //let token = JSON.parse(userInfo).accessToken;
   },
   methods: {
+    getLoginInfo() {
+      http.get(`/app/account/profile`).then(({ data }) => {
+        if (data.email === null || data.email === "") {
+          return;
+        }
+        this.ableWrite = true;
+      });
+    },
     getArticleList() {
       http
         .get(`/qna-board/getList`, {
