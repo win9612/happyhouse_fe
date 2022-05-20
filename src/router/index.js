@@ -4,15 +4,19 @@ import Home from "../views/Home.vue";
 import Login from "../views/auth/Login.vue";
 import Regist from "../views/auth/Regist.vue";
 import Service from "../views/service/Service.vue";
-import Notice from "../views/notice/Notice.vue";
-import NoticeDetail from "../views/notice/NoticeDetail.vue";
-import NoticeList from "../views/notice/NoticeList.vue";
+
+import NoticeBoard from "../views/board-notice/NoticeBoard.vue";
+import NoticeBoardList from "../views/board-notice/NoticeBoardList.vue";
+import NoticeBoardDetail from "../views/board-notice/NoticeBoardDetail.vue";
+import NoticeBoardCreate from "../views/board-notice/NoticeBoardCreate.vue";
+import NoticeBoardDelete from "../views/board-notice/NoticeBoardDelete.vue";
+import NoticeBoardModify from "../views/board-notice/NoticeBoardModify.vue";
 
 import QnaBoard from "../views/board-qna/QnaBoard.vue";
+import QnaBoardList from "../views/board-qna/QnaBoardList.vue";
 import QnaBoardDetail from "../views/board-qna/QnaBoardDetail.vue";
 import QnaBoardCreate from "../views/board-qna/QnaBoardCreate.vue";
 import QnaBoardDelete from "../views/board-qna/QnaBoardDelete.vue";
-import QnaBoardList from "../views/board-qna/QnaBoardList.vue";
 import QnaBoardModify from "../views/board-qna/QnaBoardModify.vue";
 import Profile from "../views/auth/Profile.vue";
 
@@ -49,16 +53,34 @@ const routes = [
   },
   {
     path: "/notice",
-    name: "Notice",
-    component: Notice,
+    name: "NoticeBoard",
+    component: NoticeBoard,
+    redirect: "/notice/list",
     children: [
       {
-        path: "",
-        component: NoticeList,
+        path: "list",
+        name: "NoticeBoardList",
+        component: NoticeBoardList,
       },
       {
-        path: ":id",
-        component: NoticeDetail,
+        path: "create",
+        name: "NoticeBoardCreate",
+        component: NoticeBoardCreate,
+      },
+      {
+        path: "detail",
+        name: "NoticeBoardDetail",
+        component: NoticeBoardDetail,
+      },
+      {
+        path: "modify",
+        name: "NoticeBoardModify",
+        component: NoticeBoardModify,
+      },
+      {
+        path: "delete",
+        name: "NoticeBoardDelete",
+        component: NoticeBoardDelete,
       },
     ],
   },

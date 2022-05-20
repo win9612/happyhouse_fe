@@ -9,7 +9,7 @@
       <div
         class="notice-post"
         :id="item.bno"
-        v-for="(item, index) in qnaBoard"
+        v-for="(item, index) in noticeBoard"
         :key="index"
         @click="moveDetail(item.bNo)"
       >
@@ -41,7 +41,7 @@
       <div
         class="page_element col-1"
         style="cursor: pointer"
-        v-if="page !== totalPage"
+        v-if="page !== totalPage && totalPage > 1"
         @click="moveAfterPage()"
       >
         다음
@@ -56,12 +56,12 @@
 import http from "../../api/http-common";
 
 export default {
-  name: "QnaBoardList",
+  name: "NoticeBoardList",
   data() {
     return {
       page: 1, // 현재 페이지 (초기 기본값 1)
       totalPage: 0,
-      qnaBoard: [], // 게시글 목록
+      noticeBoard: [], // 게시글 목록
       pageNavigation: [], // 페이지 내비게이션 목록
       ableWrite: false, // 글쓰기 사용가능 여부
     };
@@ -73,22 +73,21 @@ export default {
   methods: {
     getLoginInfo() {
       http.get(`/app/account/profile`).then(({ data }) => {
-        if (data.email === null || data.email === "") {
-          return;
+        if (data.role === "admin") {
+          this.ableWrite = true;
         }
-        this.ableWrite = true;
       });
     },
     getArticleList() {
       http
-        .get(`/qna-board/getList`, {
+        .get(`/notice-board/getList`, {
           params: {
             page: this.page,
           },
         })
         .then(({ data }) => {
           this.page = data.result.currentPage;
-          this.qnaBoard = data.result.articleList;
+          this.noticeBoard = data.result.articleList;
           this.totalPage = data.result.totalPage;
           this.pageNavigation = [];
           for (let i = data.result.startPage; i <= data.result.endPage; i++) {
@@ -103,10 +102,10 @@ export default {
         });
     },
     moveDetail(bNo) {
-      this.$router.push({ name: "QnaBoardDetail", query: { bno: bNo } });
+      this.$router.push({ name: "NoticeBoardDetail", query: { bno: bNo } });
     },
     moveWrite() {
-      this.$router.push({ name: "QnaBoardCreate" });
+      this.$router.push({ name: "NoticeBoardCreate" });
     },
     pageNaviClickHandler() {
       console.log("page navigation");

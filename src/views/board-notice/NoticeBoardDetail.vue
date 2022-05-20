@@ -29,13 +29,11 @@
         </button>
       </div>
     </div>
-    <QnaCommentVue :bno="parseInt(bNo)" />
   </div>
 </template>
 
 <script>
 import http from "../../api/http-common";
-import QnaCommentVue from "./QnaComment.vue";
 export default {
   data() {
     return {
@@ -54,7 +52,7 @@ export default {
   methods: {
     getArticleData() {
       http
-        .get(`/qna-board/getOne`, {
+        .get(`/notice-board/getOne`, {
           params: {
             bNo: this.bNo,
           },
@@ -79,25 +77,22 @@ export default {
         });
     },
     moveList() {
-      this.$router.push({ name: "QnaBoardList" });
+      this.$router.push({ name: "NoticeBoardList" });
     },
     moveModify() {
       this.$router.replace({
-        name: "QnaBoardModify",
+        name: "NoticeBoardModify",
         query: { bno: this.bNo },
       });
     },
     deleteArticle() {
       if (confirm("정말로 삭제하시겠습니까?")) {
         this.$router.replace({
-          name: "QnaBoardDelete",
+          name: "NoticeBoardDelete",
           query: { bno: this.bNo, browsingUserEmail: this.browsingUserEmail },
         });
       }
     },
-  },
-  components: {
-    QnaCommentVue,
   },
 };
 </script>

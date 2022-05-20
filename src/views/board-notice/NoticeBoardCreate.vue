@@ -2,20 +2,6 @@
   <div id="app">
     <div class="input_form mt-5">
       <input
-        disabled
-        type="text"
-        class="mb-3 w-100"
-        v-model="bWriterEmail"
-        placeholder="이메일"
-      /><br />
-      <input
-        disabled
-        type="text"
-        class="mb-3 w-100"
-        v-model="bWriterName"
-        placeholder="이름"
-      /><br />
-      <input
         type="text"
         class="mb-3 w-100"
         v-model="bTitle"
@@ -63,7 +49,7 @@ export default {
       .then(({ data }) => {
         if (data.email === null || data.email.length < 1) {
           alert("로그인 후 글 작성이 가능합니다.");
-          this.$router.push({ name: "QnaBoardList" });
+          this.$router.push({ name: "NoticeBoardList" });
         }
 
         this.bWriterEmail = data.email;
@@ -71,21 +57,15 @@ export default {
       })
       .catch(() => {
         alert("비정상적인 접근입니다.");
-        this.$router.push({ name: "QnaBoardList" });
+        this.$router.push({ name: "NoticeBoardList" });
       });
   },
   methods: {
     moveList() {
-      this.$router.push({ name: "QnaBoardList" });
+      this.$router.push({ name: "NoticeBoardList" });
     },
     addArticle() {
-      if (this.bWriterEmail == null || this.bWriterEmail.length < 1) {
-        alert("이메일을 입력해주세요");
-        return;
-      } else if (this.bWriterName == null || this.bWriterName.length < 1) {
-        alert("이름을 입력해주세요");
-        return;
-      } else if (this.bTitle == null || this.bTitle.length < 1) {
+      if (this.bTitle == null || this.bTitle.length < 1) {
         alert("제목을 입력해주세요.");
         return;
       } else if (this.bContent == null || this.bContent.length < 1) {
@@ -96,10 +76,10 @@ export default {
       this.bContent = this.bContent.replace(/(\n|\r\n)/g, "<br>");
 
       http
-        .post(`/qna-board/add`, this.setParams)
+        .post(`/notice-board/add`, this.setParams)
         .then(() => {
           alert("성공적으로 등록되었습니다.");
-          this.$router.push({ name: "QnaBoardList" });
+          this.$router.push({ name: "NoticeBoardList" });
         })
         .catch(() => {
           alert("등록에 실패했습니다.");
