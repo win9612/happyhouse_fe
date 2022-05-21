@@ -37,6 +37,7 @@
         class="social-btn kakao"
         :src="require(`@/assets/images/kakao.png`)"
         alt="집이미지"
+        @click="kakaoLogin()"
       />
       <img
         class="social-btn naver"
