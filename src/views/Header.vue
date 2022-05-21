@@ -45,10 +45,7 @@
                 href="/login"
                 class="btn btn-outline-primary me-3"
                 type="submit"
-                >로그인</a
-              >
-              <a href="/regist" class="btn btn-primary" type="submit"
-                >회원가입</a
+                >로그인 &nbsp; | &nbsp; 회원가입</a
               >
             </span>
           </div>
