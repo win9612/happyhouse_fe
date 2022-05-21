@@ -8,6 +8,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 Vue.config.productionTip = false;
 
+window.Kakao.init("a8a009f84e0340aafcbbf92fa5b1365e");
+
 new Vue({
   router,
   store,

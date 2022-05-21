@@ -37,6 +37,7 @@
         class="social-btn kakao"
         :src="require(`@/assets/images/kakao.png`)"
         alt="집이미지"
+        @click="kakaoLogin()"
       />
       <img
         class="social-btn naver"
@@ -77,6 +78,20 @@ export default {
         .catch(function (err) {
           console.log(err);
         });
+    },
+    kakaoLogin: function () {
+      console.log("kakao 회원가입");
+
+      const params = {
+        redirectUri: "http://localhost:3000/regist",
+        scope: "account_email",
+        success: this.getMe,
+      };
+
+      window.Kakao.Auth.authorize(params);
+    },
+    getMe(authObj) {
+      console.log(authObj);
     },
   },
 };

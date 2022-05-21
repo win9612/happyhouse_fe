@@ -19,6 +19,7 @@ import QnaBoardCreate from "../views/board-qna/QnaBoardCreate.vue";
 import QnaBoardDelete from "../views/board-qna/QnaBoardDelete.vue";
 import QnaBoardModify from "../views/board-qna/QnaBoardModify.vue";
 import Profile from "../views/auth/Profile.vue";
+import SocialRegist from "../views/auth/SocialRegist.vue";
 
 Vue.use(VueRouter);
 
@@ -37,6 +38,15 @@ const routes = [
     path: "/regist",
     name: "Regist",
     component: Regist,
+    props: true,
+    meta: {
+      unauthorized: true,
+    },
+  },
+  {
+    path: "/socialRegist",
+    name: "SocialRegist",
+    component: SocialRegist,
     meta: {
       unauthorized: true,
     },
