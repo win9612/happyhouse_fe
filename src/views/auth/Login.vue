@@ -78,6 +78,20 @@ export default {
           console.log(err);
         });
     },
+    kakaoLogin: function () {
+      console.log("kakao 회원가입");
+
+      const params = {
+        redirectUri: "http://localhost:3000/regist",
+        scope: "account_email",
+        success: this.getMe,
+      };
+
+      window.Kakao.Auth.authorize(params);
+    },
+    getMe(authObj) {
+      console.log(authObj);
+    },
   },
 };
 </script>
