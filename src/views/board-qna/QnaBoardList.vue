@@ -20,7 +20,7 @@
     </section>
     <!-- 게시판 element 끝 -->
 
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation">
       <ul class="pagination">
         <li class="page-item" v-if="page - 1" @click="moveBeforePage()">
           <a class="page-link" href="#">이전</a>
