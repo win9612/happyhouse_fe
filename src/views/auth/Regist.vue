@@ -1,6 +1,6 @@
 <template>
   <div class="login-wrapper">
-    <div class="login-form-logo">
+    <div class="login-form-logo text-center">
       <a href="/">HAPPY HOUSE</a>
     </div>
     <div class="form-container text-start">
@@ -39,14 +39,14 @@
         placeholder="비밀번호 확인"
         v-model="passwordConfirm"
       />
-      <div class="d-grid gap-2">
+      <div class="d-grid gap-2 mb-4">
         <button class="btn btn-primary btn-lg" @click="regist">회원가입</button>
         <div class="text-end sub-menu"></div>
       </div>
-      <hr />
+      <!-- <hr /> -->
     </div>
 
-    <div class="social-container">
+    <!-- <div class="social-container">
       <img
         class="social-btn kakao"
         :src="require(`@/assets/images/kakao.png`)"
@@ -58,7 +58,7 @@
         :src="require(`@/assets/images/naver.png`)"
         alt="집이미지"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 
