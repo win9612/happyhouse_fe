@@ -92,7 +92,7 @@ export default {
           for (let i = data.result.startPage; i <= data.result.endPage; i++) {
             if (this.page === i) {
               this.pageNavigation.push(
-                "<strong class='bg-warning'>" + i + "</strong>"
+                "<strong class='page-active'>" + i + "</strong>"
               );
             } else {
               this.pageNavigation.push(i);
@@ -145,5 +145,8 @@ export default {
 .page_element {
   border: 1px solid blue;
   color: blue;
+}
+.page-active {
+  color: #0d6efd;
 }
 </style>

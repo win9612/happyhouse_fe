@@ -21,6 +21,9 @@ import QnaBoardModify from "../views/board-qna/QnaBoardModify.vue";
 import Profile from "../views/auth/Profile.vue";
 import SocialRegist from "../views/auth/SocialRegist.vue";
 
+import AccountInfo from "../views/auth/profile_contents/AccountInfo.vue";
+import QnaList from "../views/auth/profile_contents/QnaList.vue";
+import Recent from "../views/auth/profile_contents/Recent.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -55,6 +58,24 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile,
+    redirect: "profile/account",
+    children: [
+      {
+        path: "/profile/account",
+        name: "AccountInfo",
+        component: AccountInfo,
+      },
+      {
+        path: "/profile/recent",
+        name: "Recent",
+        component: Recent,
+      },
+      {
+        path: "/profile/QnaList",
+        name: "QnaList",
+        component: QnaList,
+      },
+    ],
   },
   {
     path: "/service",
