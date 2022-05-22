@@ -2,15 +2,13 @@
   <div>
     <h3>답변</h3>
     <hr />
-    <div id="write_form" class="row" v-if="ableWrite">
+    <div id="write_form" class="d-flex" v-if="ableWrite">
       <textarea
         id="c-content-form"
-        class="form-control col"
+        class="form-control comment-input"
         v-model="cContent"
-        cols="20"
-        rows="10"
       ></textarea>
-      <button class="col-1 btn btn-primary" @click="addCommentList">
+      <button class="btn btn-primary comment-submit" @click="addCommentList">
         작성
       </button>
     </div>
@@ -20,11 +18,11 @@
         v-for="(item, index) in createCommentList"
         :key="index"
       >
-        답변자 : <strong>{{ item.cWriterName }}</strong>
-        <span> &nbsp;|&nbsp; </span>
+        <span class="c-writer">{{ item.cWriterName }}</span>
+        <span> &nbsp;&nbsp; </span>
         <span style="color: gray">{{ item.cWriteDate }}</span>
         <!-- 로그인 정보 불러와서 "현재로그인이메일 == cWriterEmail" 인지 v-if로 확인해야함-->
-        <span> &nbsp;|&nbsp; </span>
+        <span> &nbsp;&nbsp; </span>
         <span
           :id="item.cNo"
           style="color: red; cursor: pointer"
@@ -33,7 +31,6 @@
           >삭제</span
         >
         <div v-text="item.cContent" class="mb-3"></div>
-        <hr />
       </div>
     </div>
   </div>
@@ -158,5 +155,31 @@ export default {
 <style>
 .comment-list {
   padding-top: 30px;
+}
+
+.comment-item {
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+}
+.c-writer {
+  font-weight: bold;
+  font-size: 18px;
+}
+.comment-input {
+  resize: none;
+  height: 60px;
+  width: 100%;
+}
+
+.comment-submit {
+  width: 150px;
+  height: 60px;
+  margin-left: 10px;
+}
+
+#write_form {
+  /* padding: 0 15px; */
 }
 </style>

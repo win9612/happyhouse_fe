@@ -1,6 +1,9 @@
 /* eslint-disable prettier/prettier */
 <template>
-  <div id="map" style="width: 100%; min-width: 1200px; height: 100%"></div>
+  <div
+    id="map"
+    style="width: 100%; min-width: 1200px; height: 100%; opacity: 0.7"
+  ></div>
 </template>
 
 <script>
@@ -26,6 +29,7 @@ export default {
         level: 5,
       };
       this.map = new window.kakao.maps.Map(container, options);
+      this.map.removeOverlayMapTypeId(window.kakao.maps.MapTypeId.TRAFFIC);
 
       var _this = this;
 
@@ -74,11 +78,13 @@ export default {
     },
     // 시 / 구군 / 동 마커 생성 함수
     createOverlay() {
-      console.log("overlay");
       let map = this.map;
+      let level = map.getLevel();
+      console.log(level);
       // let content = `<div class ="location-label">여기야!</div>`;
       // let position = new window.kakao.maps.LatLng(37.4976537, 127.0467951);
 
+      // positions에 데이터를 level에 따라 다르게 불러오면 됨
       let positions = [
         {
           title: `<div class ="location-label">여기야!</div>`,
@@ -103,14 +109,15 @@ export default {
         customOverlay.setMap(map);
       }
 
-      var clusterer = new window.kakao.maps.MarkerClusterer({
-        map: map,
-        averageCenter: true,
-        minLevel: 5,
-      });
-      console.log(overlays);
+      // 오버레이 클러스터링 일단 주석처리
+      // var clusterer = new window.kakao.maps.MarkerClusterer({
+      //   map: map,
+      //   averageCenter: true,
+      //   minLevel: 5,
+      // });
+      // console.log(overlays);
 
-      clusterer.addMarkers(overlays);
+      // clusterer.addMarkers(overlays);
     },
   },
   mounted() {

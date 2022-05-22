@@ -3,31 +3,23 @@
     <div class="article mt-5">
       <div class="article_title mb-3 pb-3 border-bottom">
         <h3>{{ article.bTitle }}</h3>
-        <span
-          >작성자 : <strong>{{ article.bWriterName }}</strong></span
-        >
+        <span>{{ article.bWriterName }}</span>
         &nbsp;|&nbsp;
         <span style="color: gray">{{ article.bWriteDate }}</span>
       </div>
       <div
-        class="article_content mb-3 pt-3 pb-3 border"
+        class="article_content mb-3 pt-3 pb-3"
         v-html="article.bContent"
       ></div>
     </div>
-    <div align="center" class="menu_bar mb-1 row">
-      <div class="d col-4">
-        <button class="btn btn-primary" @click="moveList">목록</button>
-      </div>
-      <div class="d col-4">
-        <button class="btn btn-info" v-if="ableModify" @click="moveModify">
-          글 수정
-        </button>
-      </div>
-      <div class="d col-4">
-        <button class="btn btn-danger" v-if="ableDelete" @click="deleteArticle">
-          글 삭제
-        </button>
-      </div>
+    <div align="right" class="menu_bar mb-1">
+      <button class="btn btn-primary" @click="moveList">목록</button>
+      <button class="btn btn-info" v-if="ableModify" @click="moveModify">
+        글 수정
+      </button>
+      <button class="btn btn-danger" v-if="ableDelete" @click="deleteArticle">
+        글 삭제
+      </button>
     </div>
   </div>
 </template>
@@ -65,12 +57,10 @@ export default {
       http
         .get(`/app/account/profile`)
         .then(({ data }) => {
-          this.browsingUserEmail = data.email;
-          if (this.browsingUserEmail !== this.article.bWriterEmail) {
-            return;
+          if (data.role === "ADMIN") {
+            this.ableModify = true;
+            this.ableDelete = true;
           }
-          this.ableModify = true;
-          this.ableDelete = true;
         })
         .catch((resp) => {
           console.log(resp); // ISSUE
@@ -97,4 +87,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.menu_bar button {
+  margin-left: 10px;
+}
+</style>
