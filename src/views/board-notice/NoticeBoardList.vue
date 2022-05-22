@@ -21,33 +21,32 @@
     <!-- 게시판 element 끝 -->
 
     <!-- Page Navigation 시작 -->
-    <div align="center" class="page_navigation row mb-5">
-      <div
-        class="page_element col-1"
-        style="cursor: pointer"
-        v-if="page - 1"
-        @click="moveBeforePage()"
-      >
-        이전
-      </div>
-      <div class="page_element col-1" v-else></div>
-      <div
-        class="page_element col-1"
-        v-for="(item, index) in pageNavigation"
-        :key="index"
-        v-html="item"
-        @click="movePage(item)"
-      ></div>
-      <div
-        class="page_element col-1"
-        style="cursor: pointer"
-        v-if="page !== totalPage && totalPage > 1"
-        @click="moveAfterPage()"
-      >
-        다음
-      </div>
-      <div class="page_element col-1" v-else></div>
-    </div>
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item" v-if="page - 1" @click="moveBeforePage()">
+          <a class="page-link" href="#">이전</a>
+        </li>
+        <li
+          class="page-item"
+          v-for="(item, index) in pageNavigation"
+          :key="index"
+        >
+          <a
+            class="page-link"
+            href="#"
+            v-html="item"
+            @click="movePage(item)"
+          ></a>
+        </li>
+        <li
+          class="page-item"
+          v-if="page !== totalPage"
+          @click="moveAfterPage()"
+        >
+          <a class="page-link" href="#">다음</a>
+        </li>
+      </ul>
+    </nav>
     <!-- Page Navigation 끝 -->
   </div>
 </template>
@@ -60,7 +59,7 @@ export default {
   data() {
     return {
       page: 1, // 현재 페이지 (초기 기본값 1)
-      totalPage: 0,
+      totalPage: 1,
       noticeBoard: [], // 게시글 목록
       pageNavigation: [], // 페이지 내비게이션 목록
       ableWrite: false, // 글쓰기 사용가능 여부
@@ -73,7 +72,7 @@ export default {
   methods: {
     getLoginInfo() {
       http.get(`/app/account/profile`).then(({ data }) => {
-        if (data.role === "admin") {
+        if (data.role === "ADMIN") {
           this.ableWrite = true;
         }
       });
@@ -93,7 +92,7 @@ export default {
           for (let i = data.result.startPage; i <= data.result.endPage; i++) {
             if (this.page === i) {
               this.pageNavigation.push(
-                "<strong class='bg-warning'>" + i + "</strong>"
+                "<strong class='page-active'>" + i + "</strong>"
               );
             } else {
               this.pageNavigation.push(i);
@@ -146,5 +145,8 @@ export default {
 .page_element {
   border: 1px solid blue;
   color: blue;
+}
+.page-active {
+  color: #0d6efd;
 }
 </style>

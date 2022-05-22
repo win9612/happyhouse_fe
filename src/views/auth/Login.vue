@@ -1,5 +1,5 @@
 <template>
-  <div class="login-wrapper">
+  <div class="login-wrapper text-center">
     <div class="login-form-logo">
       <a href="/">HAPPY HOUSE</a>
     </div>

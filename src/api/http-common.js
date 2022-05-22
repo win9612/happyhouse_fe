@@ -17,7 +17,7 @@ axiosInstance.interceptors.request.use(
       let token = JSON.parse(localStorage.getItem("jwt")).accessToken;
       config.headers["Content-Type"] = "application/json; charset=utf-8";
       config.headers["token"] = token;
-      console.log("req =>", localStorage.getItem("jwt"));
+      // console.log("req =>", localStorage.getItem("jwt"));
 
       return config;
     } catch (error) {
@@ -38,23 +38,19 @@ axiosInstance.interceptors.response.use(
     if (res.config.url == "/app/auth/refreshToken") {
       localStorage.setItem("jwt", JSON.stringify(res.data.result));
     }
-    console.log("response =>", localStorage.getItem("jwt"));
     return res;
   },
   function (err) {
     // 오류 응답 처리
-    console.log("err interceptor=>");
     let code = err.message.split(" ")[5];
     if (code == "401") {
       // 토큰 만료이므로 리프레시 요청
-      console.log(401);
       axiosInstance
         .post("/app/auth/refreshToken", {
           refreshIdx: JSON.parse(localStorage.getItem("jwt")).refreshIdx,
         })
         .then(function (res) {
           let code = res.data.result.code;
-          console.log(code);
           if (code == 445) {
             // 모든 토큰 만료이므로 다시 로그인하라고 로그인 요청
             alert("토큰이 만료되었습니다. 로그인이 필요합니다.");
