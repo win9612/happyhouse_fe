@@ -192,22 +192,30 @@ export default {
     await this.getHouseDeal();
     await this.getInterestInfo();
   },
+  mounted() {
+    let _this = this;
+    window.kakao.maps.load(function () {
+      _this.initMap();
+    });
+  },
   methods: {
     getHouseInfo() {
+      let _this = this;
       http
         .get("/houseinfo/list/" + this.aptCode)
         .then(({ data }) => {
-          this.title = data.apartmentName;
-          this.sidoName = data.sidoName;
-          this.gugunName = data.gugunName;
-          this.dongName = data.dong;
-          this.jibun = data.jibun;
-          this.buildYear = data.buildYear;
-          this.aptLocation.push(data.lat);
-          this.aptLocation.push(data.lng);
-          this.initMap();
+          _this.title = data.apartmentName;
+          _this.sidoName = data.sidoName;
+          _this.gugunName = data.gugunName;
+          _this.dongName = data.dong;
+          _this.jibun = data.jibun;
+          _this.buildYear = data.buildYear;
+          _this.aptLocation.push(data.lat);
+          _this.aptLocation.push(data.lng);
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log(error);
+          console.log(window.kakao.maps);
           alert("매물 정보를 불러오는 중 문제가 발생했습니다.");
         });
     },
