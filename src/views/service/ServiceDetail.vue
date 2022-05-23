@@ -44,10 +44,6 @@
               <div class="col-sm-4"><strong>건축년도</strong></div>
               <div class="col-sm-8" align="left">{{ buildYear }}</div>
             </div>
-            <div class="row-sm-4 row">
-              <div class="col-sm-4"><strong>매물 형태</strong></div>
-              <div class="col-sm-8" align="left">매매</div>
-            </div>
           </div>
         </div>
         <div class="inform_block row">
@@ -90,9 +86,61 @@
           </div>
         </div>
         <div class="inform_block row">
-          <div class="col-sm-5 border-right">
+          <div class="col-sm-5 border-right" align="center">
             <h2 align="center">상권정보</h2>
+            <div
+              class="btn btn-primary w-50 mt-3"
+              v-if="placeList.length > 0 && !placeListShow"
+              @click="placeListShow = !placeListShow"
+            >
+              펼쳐보기
+            </div>
+            <div
+              class="btn btn-primary w-50 mt-3"
+              v-if="placeListShow"
+              @click="placeListShow = !placeListShow"
+            >
+              접기
+            </div>
+            <div class="p_list_container" v-if="placeListShow">
+              <div
+                class="p_list_element mt-3 border-top border-bottom row"
+                align="center"
+                v-for="(place, index) in placeList"
+                :key="index"
+              >
+                <div class="col-sm-4 mt-1 mb-1" align="right"><b>이름</b></div>
+                <div class="col-sm-8 mt-1 mb-1" align="left">
+                  {{ place.place_name }}
+                </div>
+                <div class="col-sm-4 mt-1 mb-1" align="right"><b>주소</b></div>
+                <div class="col-sm-8 mt-1 mb-1" align="left">
+                  {{ place.road_address_name }}
+                </div>
+                <div class="col-sm-4 mt-1 mb-1" align="right">
+                  <b>카테고리</b>
+                </div>
+                <div class="col-sm-8 mt-1 mb-1" align="left">
+                  {{ place.category_group_name }}
+                </div>
+                <div class="col-sm-4 mt-1 mb-1" align="right">
+                  <b>매물에서의 거리</b>
+                </div>
+                <div class="col-sm-8 mt-1 mb-1" align="left">
+                  {{ place.distance }} m
+                </div>
+                <div class="col-sm-4 mt-1 mb-1" align="right"></div>
+                <div class="col-sm-8 mt-1 mb-1" align="left">
+                  <b
+                    ><a :href="place.place_url" target="_blank"
+                      >자세히 보기</a
+                    ></b
+                  >
+                </div>
+              </div>
+            </div>
           </div>
+
           <div class="col-sm-7 row informs" align="center">
             <div id="select_buttons_container" align="center">
               <!-- 이 부분에 fontAwesome을 사용하면 좋을거같다. -->
@@ -133,20 +181,30 @@
               </button>
             </div>
             <div id="keyword_container" align="center">
-              <input type="text" v-model.trim.lazy="placeKeyword" />
               <input
+                class="input_form"
                 type="text"
-                class="btn btn-success"
+                v-model.trim.lazy="placeKeyword"
+                @keyup.enter="searchPlaces"
+              />
+              <input
+                type="submit"
+                class="input_button btn btn-success"
                 value="검색"
                 @click="searchPlaces"
               />
             </div>
-            <div id="kakao_map_container" class="">
-              kakao map area
+            <div
+              id="place_msg"
+              class="mb-1"
+              v-html="placeMsgHtml"
+              align="center"
+            ></div>
+            <div id="kakao_map_container" class="mt-1" align="top">
               <div
                 id="map"
-                class=""
-                style="width: 100%; height: 100%; opacity: 0.7"
+                class="round"
+                style="width: 100%; height: 100%; opacity: 0.9"
               ></div>
             </div>
           </div>
@@ -181,9 +239,12 @@ export default {
       deals: [], // 거래 내역
       isDealListShow: false,
       isInterest: false,
+      placeListShow: false,
       placeKeyword: "",
       map: "", // 카카오맵
       placeMarkers: [],
+      placeList: [],
+      placeMsgHtml: `<strong>이 매물의 <span class="text-primary">주변 상권</span>을검색해보세요!</strong>`,
     };
   },
   created: async function () {
@@ -215,8 +276,8 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          console.log(window.kakao.maps);
           alert("매물 정보를 불러오는 중 문제가 발생했습니다.");
+          this.$router.push({ name: "Service" });
         });
     },
     getHouseDeal() {
@@ -226,7 +287,7 @@ export default {
           this.deals = data;
         })
         .catch(() => {
-          alert("거래 정보를 불러오는 중 문제가 발생했습니다.");
+          this.$router.push({ name: "Service" });
         });
     },
     getInterestInfo() {
@@ -257,13 +318,6 @@ export default {
             this.isInterest = true;
           }
         });
-    },
-    setParams() {
-      let form = {
-        no: this.userNo,
-        aptCode: this.aptCode,
-      };
-      return form;
     },
     clickInterestHandler() {
       if (this.isInterest) {
@@ -330,6 +384,10 @@ export default {
       if (e.target.value === "검색") {
         keyword = this.placeKeyword;
       }
+      if (keyword === null || keyword.length < 1) {
+        this.placeMsgHtml = `<strong class="text-danger">검색어를 입력해주세요!</strong>`;
+        return;
+      }
       axios({
         method: "get",
         url: "https://dapi.kakao.com/v2/local/search/keyword.json",
@@ -343,12 +401,17 @@ export default {
           size: 15,
           sort: "distance",
         },
-      }).then(({ data }) => {
-        const places = data.documents;
-        this.makePlaceMarkers(places, keyword);
-      });
+      })
+        .then(({ data }) => {
+          this.placeList = data.documents;
+          this.makePlaceMarkers(this.placeList, keyword);
+        })
+        .then(() => {
+          this.makePlaceMsg(this.placeList, keyword);
+        });
     },
-    makePlaceMarkers(places, keyword) {
+    async makePlaceMarkers(places, keyword) {
+      const len = places.length;
       // 기존 장소 마커들 전부 삭제
       for (let i = 0; i < this.placeMarkers.length; i++) {
         this.placeMarkers[i].setMap(null);
@@ -378,7 +441,7 @@ export default {
       );
 
       // 마커 위치 설정 및 마커 생성
-      for (let i = 0; i < places.length; i++) {
+      for (let i = 0; i < len; i++) {
         // 마커 위치
         let markerPosition = new window.kakao.maps.LatLng(
           places[i].y,
@@ -391,8 +454,8 @@ export default {
           image: markerImage,
         });
 
-        this.placeMarkers.push(marker);
-        marker.setMap(this.map);
+        await this.placeMarkers.push(marker);
+        await marker.setMap(this.map);
         //this.placeMarkers[i].setMap(this.map);
 
         let markerTitle = `<div class="p-1"><strong>${places[i].place_name}</strong></div>`;
@@ -409,6 +472,36 @@ export default {
       }
     },
     /* 카카오맵 함수 끝 */
+    makePlaceMsg(place, keyword) {
+      let len = place.length;
+      let score = 0;
+      let result = [
+        `<strong class="text-primary">좋음</strong>`,
+        `<strong class="text-success">보통</strong>`,
+        `<strong class="text-danger">나쁨</strong>`,
+      ];
+
+      // score 계산 로직
+      for (let i = 0; i < len; i++) {
+        score += 500; // 존재하는 place 하나 당 500점
+        score -= place[i].distance; // 거리만큼 차감
+      }
+
+      // 접근성 결정
+      let r = 0;
+      if (score >= 3000) {
+        r = 0;
+      } else if (score >= 650) {
+        r = 1;
+      } else {
+        r = 2;
+      }
+
+      if (len === 0)
+        this.placeMsgHtml = `<strong class="text-danger">매물 근처에 ${keyword} 존재하지 않습니다.</strong>`;
+      else
+        this.placeMsgHtml = `<strong>${keyword}</strong>에 대한 분포는 ${result[r]} 입니다.`;
+    },
   },
 };
 </script>
@@ -441,5 +534,12 @@ ain {
 #kakao_map_container {
   width: 100%;
   height: 600px;
+}
+.input_form {
+  width: 250px;
+  margin-right: 10px;
+}
+.input_button {
+  width: 100px;
 }
 </style>
