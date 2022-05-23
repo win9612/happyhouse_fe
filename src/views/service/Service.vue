@@ -21,8 +21,17 @@
                 class="item"
                 v-for="(item, index) in checkDongList"
                 :key="index"
+                @click="
+                  sender({
+                    dongName: item.dongname,
+                    lat: item.lat,
+                    lng: item.lng,
+                    level: 3,
+                  })
+                "
               >
                 {{ item.dongname }}
+                <!-- {{ item }} -->
               </div>
             </div>
           </div>
@@ -33,9 +42,19 @@
                 class="item"
                 v-for="(item, index) in checkAptList"
                 :key="index"
+                @click="
+                  sender({
+                    name: item.apartmentName,
+                    lat: item.lat,
+                    lng: item.lng,
+                    level: 2,
+                    code: item.aptCode,
+                  })
+                "
               >
                 {{ item.apartmentName }} <br />
                 {{ item.dong }}
+                <!-- {{ item }} -->
               </div>
             </div>
           </div>
@@ -52,6 +71,7 @@
 import axios from "axios";
 import Map from "./Map.vue";
 import HeaderVue from "../Header.vue";
+import EventBus from "./EventBus";
 
 export default {
   name: "Service",
@@ -77,7 +97,7 @@ export default {
           url: "http://127.0.0.1:8080/apt-search/apt?keyword=" + e.target.value,
           method: "get",
         }).then(function (res) {
-          console.log("search =>", res);
+          // console.log("search =>", res);
           _this.$store.state.house.aptList = res.data;
         });
 
@@ -93,7 +113,7 @@ export default {
             e.target.value,
           method: "get",
         }).then(function (res) {
-          console.log("search =>", res);
+          // console.log("search =>", res);
 
           _this.$store.state.house.aptList = res.data;
         });
@@ -103,12 +123,15 @@ export default {
         method: "get",
       })
         .then(function (res) {
-          console.log("search dongList=>", res);
+          // console.log("search dongList=>", res);
           _this.$store.state.house.dongList = res.data;
         })
         .catch(function () {
           _this.$store.state.house.dongList = "";
         });
+    },
+    sender(dongName) {
+      EventBus.$emit("move", dongName);
     },
   },
   // vuex 값이 변경되면 aptList 갱신
@@ -131,6 +154,7 @@ export default {
   mounted() {
     this.$store.state.house.aptList = "";
     this.$store.state.house.dongList = "";
+    console.log(this);
   },
 };
 </script>
