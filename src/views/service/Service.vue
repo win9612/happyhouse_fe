@@ -3,55 +3,20 @@
     <HeaderVue />
     <main>
       <div class="d-flex h-100">
-        <aside class="side-menu">
-          <div class="search-bar d-flex">
-            <div class="input-box">
-              <input
-                id="search-text"
-                type="text"
-                placeholder="동 또는 아파트 이름으로 검색"
-                class="form-control"
-                @input="search($event)"
-              />
-              <!-- <div class="search-result">123123</div> -->
-            </div>
-          </div>
-          <div class="title fw-bold fs-5 pt-2 pb-2">
-            검색 이전 히든처리 여긴 필터들어갈자리
-          </div>
-          <div class="item-list">
-            <div class="item" v-for="(item, index) in aptList" :key="index">
-              <div class="item-title">{{ item.aptName }}</div>
-              <div>{{ item }}</div>
-            </div>
-            {{ aptList }}
+        <aside class="search-box">
+          <div class="search-input-container">
+            <input
+              id="search-input"
+              type="text"
+              placeholder="동 또는 아파트 이름으로 검색"
+              class="form-control"
+              @input="search($event)"
+            />
+            <i class="fa-solid fa-search"></i>
           </div>
         </aside>
         <div class="map-box bg-light h-100 w-100 min-width:1200px">
           <Map />
-          <div class="control-box">
-            <div class="custom_typecontrol radius_border d-flex">
-              <div
-                id="btnRoadmap"
-                class="btn btn-sm btn-light"
-                onclick="setMapType('roadmap')"
-              >
-                지도
-              </div>
-              <div
-                id="btnSkyview"
-                class="btn btn-sm btn-primary"
-                onclick="setMapType('skyview')"
-              >
-                스카이뷰
-              </div>
-            </div>
-            <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
-            <div class="custom_zoomcontrol radius_border">
-              <span onclick="zoomIn()"><i class="fa-solid fa-plus"></i></span>
-              <span onclick="zoomOut()"><i class="fa-solid fa-minus"></i></span>
-            </div>
-          </div>
         </div>
       </div>
     </main>
@@ -139,37 +104,25 @@ main {
   position: relative;
   height: calc(100% - 56px);
 }
-
-.side-menu {
-  min-width: 400px;
-  width: 400px;
-  height: 100%;
-  border-right: 1px solid #e0e0e0;
-}
-
-.search-bar {
-  box-sizing: border-box;
-  /* border-bottom: 1px solid #e0e0e0; */
-  /* border-top: 1px solid #e0e0e0; */
-}
-
-.input-box {
-  width: 90%;
-  min-width: 400px;
-  display: flex;
-}
-
-#search-text {
-  margin-bottom: 0;
-  border-radius: 0;
-}
-
-.search-result {
-  border: 2px solid red;
+.search-box {
+  top: 12px;
+  left: 12px;
+  z-index: 30;
   position: absolute;
-  width: 400px;
-  height: 200px;
-  margin-top: 60px;
+}
+
+.search-input-container {
+  position: relative;
+}
+
+.search-input-container input {
+  font-size: 16px !important;
+  padding-left: 50px;
+}
+.search-input-container i {
+  position: absolute;
+  top: 20px;
+  left: 10px;
 }
 
 .title {
@@ -202,19 +155,6 @@ main {
 
 .item .date {
   color: rgb(141, 141, 141);
-}
-
-.select-box {
-  margin-left: -10px;
-}
-
-.select-box select {
-  width: 150px;
-}
-
-select[name="sido"],
-select[name="gugun"] {
-  margin-right: 10px;
 }
 
 .map-box {

@@ -172,7 +172,7 @@ export default {
             _this.map.setCenter(moveLatLon);
           } else {
             window.open(
-              "/detail/?code=" + e.target.getAttribute("code"),
+              "/service/detail/?aptCode=" + e.target.getAttribute("code"),
               "_blank"
             );
           }
