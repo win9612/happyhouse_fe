@@ -9,7 +9,7 @@
 <script>
 import axios from "axios";
 import http from "../../api/http-common";
-
+import EventBus from "./EventBus";
 export default {
   name: "Map",
   data() {
@@ -184,6 +184,15 @@ export default {
     markerClick() {
       alert("hello");
     },
+  },
+  created() {
+    let _this = this;
+    EventBus.$on("move", function (data) {
+      console.log("리시브", data);
+      var moveLatLon = new window.kakao.maps.LatLng(data.lat, data.lng);
+      _this.map.setLevel(data.level);
+      _this.map.setCenter(moveLatLon);
+    });
   },
   mounted() {
     // window.kakao.maps.event.addListener(this.map, "zoom_changed", function () {
