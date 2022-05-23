@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import Login from "../views/auth/Login.vue";
 import Regist from "../views/auth/Regist.vue";
 import Service from "../views/service/Service.vue";
+import ServiceDetail from "../views/service/ServiceDetail.vue";
 
 import NoticeBoard from "../views/board-notice/NoticeBoard.vue";
 import NoticeBoardList from "../views/board-notice/NoticeBoardList.vue";
@@ -81,6 +82,11 @@ const routes = [
     path: "/service",
     name: "Service",
     component: Service,
+  },
+  {
+    path: "/service/detail",
+    name: "ServiceDetail",
+    component: ServiceDetail,
   },
   {
     path: "/notice",

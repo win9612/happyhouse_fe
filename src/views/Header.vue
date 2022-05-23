@@ -32,6 +32,10 @@
           </ul>
           <div class="d-flex ms-4">
             <span v-if="isLogin">
+              <span class="welcome_msg"
+                ><strong>{{ userName }}</strong
+                >님, 환영합니다. &nbsp;&nbsp;
+              </span>
               <button
                 @click="logout"
                 class="btn btn-outline-primary me-3"
@@ -56,11 +60,14 @@
 </template>
 
 <script>
+import http from "../api/http-common";
+
 export default {
   name: "Header",
   data: function () {
     return {
       isLogin: false,
+      userName: "",
     };
   },
   methods: {
@@ -76,6 +83,10 @@ export default {
     if (token) {
       this.isLogin = true;
     }
+
+    http.get(`/app/account/profile`).then(({ data }) => {
+      this.userName = data.name;
+    });
   },
 };
 </script>
