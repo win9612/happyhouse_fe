@@ -8,12 +8,15 @@
 
 <script>
 import axios from "axios";
+import http from "../../api/http-common";
 
 export default {
   name: "Map",
   data() {
     return {
       map: null,
+      level: "",
+      overlays: [],
       lat: "",
       lng: "",
       textContent: "",
@@ -25,8 +28,8 @@ export default {
     initMap() {
       const container = document.getElementById("map");
       const options = {
-        center: new window.kakao.maps.LatLng(37.4976537, 127.0467951),
-        level: 5,
+        center: new window.kakao.maps.LatLng(36.4976537, 128.00067951),
+        level: 12,
       };
       this.map = new window.kakao.maps.Map(container, options);
       this.map.removeOverlayMapTypeId(window.kakao.maps.MapTypeId.TRAFFIC);
@@ -76,65 +79,158 @@ export default {
         _this.$store.dispatch("house/setAptList", { newList: res.data });
       });
     },
-    // 시 / 구군 / 동 마커 생성 함수
-    createOverlay() {
-      let map = this.map;
-      let level = map.getLevel();
-      console.log(level);
-      // let content = `<div class ="location-label">여기야!</div>`;
-      // let position = new window.kakao.maps.LatLng(37.4976537, 127.0467951);
-
-      // positions에 데이터를 level에 따라 다르게 불러오면 됨
-      let positions = [
-        {
-          title: `<div class ="location-label">여기야!</div>`,
-          latlng: new window.kakao.maps.LatLng(37.4976537, 127.0447951),
-        },
-        {
-          title: `<div class ="location-label">여기야!</div>`,
-          latlng: new window.kakao.maps.LatLng(37.4976537, 127.0427951),
-        },
-        {
-          title: `<div class ="location-label">여기야!</div>`,
-          latlng: new window.kakao.maps.LatLng(37.4976537, 127.0407951),
-        },
-      ];
-      let overlays = [];
-      for (let i = 0; i < positions.length; i++) {
-        var customOverlay = new window.kakao.maps.CustomOverlay({
-          position: positions[i].latlng,
-          content: positions[i].title,
+    getZoomLevelAndCreateMarker(zoomLevel) {
+      // console.log("마커함수 줌레벨", zoomLevel);
+      let _this = this;
+      let southWest = _this.map.getBounds().getSouthWest();
+      let northEast = _this.map.getBounds().getNorthEast();
+      // console.log("남서", _this.map.getBounds().getSouthWest());
+      // console.log("북동", _this.map.getBounds().getNorthEast());
+      // 12~9  광역시도
+      // 8~7  시군구
+      // 6~4  동
+      // 3~   아파트
+      if (zoomLevel >= 9) {
+        http.get("/overlay/sidoList").then(function (res) {
+          _this.createMarker(res);
         });
-        overlays.push(customOverlay);
-        customOverlay.setMap(map);
+      } else if (zoomLevel >= 7) {
+        http.get("/overlay/gugunList").then(function (res) {
+          _this.createMarker(res);
+        });
+      } else if (zoomLevel >= 5) {
+        http
+          .get("/overlay/dongList", {
+            params: {
+              startLat: southWest.Ma,
+              startLng: southWest.La,
+              endLat: northEast.Ma,
+              endLng: northEast.La,
+            },
+          })
+          .then(function (res) {
+            _this.createMarker(res);
+          });
+      } else if (zoomLevel < 5) {
+        http
+          .get("/overlay/aptList", {
+            params: {
+              startLat: southWest.Ma,
+              startLng: southWest.La,
+              endLat: northEast.Ma,
+              endLng: northEast.La,
+            },
+          })
+          .then(function (res) {
+            _this.createMarker(res);
+          });
+      }
+    },
+    createMarker(res) {
+      let positions = [];
+      let _this = this;
+      let nowLevel = _this.map.getLevel();
+
+      if (nowLevel >= 9) {
+        nowLevel = 7;
+      } else if (nowLevel >= 7) {
+        nowLevel = 5;
+      } else if (nowLevel > 4) {
+        nowLevel = 3;
       }
 
-      // 오버레이 클러스터링 일단 주석처리
-      // var clusterer = new window.kakao.maps.MarkerClusterer({
-      //   map: map,
-      //   averageCenter: true,
-      //   minLevel: 5,
-      // });
-      // console.log(overlays);
+      // console.log(res);
+      for (let i = 0; i < res.data.length; i++) {
+        let obj = new window.kakao.maps.LatLng(
+          res.data[i].lat,
+          res.data[i].lng
+        );
+        positions.push({
+          position: obj,
+          content: `<div id="overlay" level="${nowLevel}" code="${res.data[i].code}" lat="${res.data[i].lat}" lng="${res.data[i].lng}" class ="location-label">${res.data[i].name}</div>`,
+        });
+      }
+      for (let i = 0; i < this.overlays.length; i++) {
+        this.overlays[i].setMap(null);
+      }
+      this.overlays = [];
+      for (let i = 0; i < positions.length; i++) {
+        var cusmtomOverlay = new window.kakao.maps.CustomOverlay(positions[i]);
+        this.overlays.push(cusmtomOverlay);
+        cusmtomOverlay.setMap(this.map);
+      }
+      // 커스텀오버레이 클릭이벤트
+      let overlays = document.querySelectorAll("#overlay");
+      overlays.forEach(function (overlay) {
+        overlay.addEventListener("click", function (e) {
+          if (_this.map.getLevel() >= 5) {
+            var moveLatLon = new window.kakao.maps.LatLng(
+              e.target.getAttribute("lat"),
+              e.target.getAttribute("lng")
+            );
+            _this.map.setLevel(e.target.getAttribute("level"));
+            _this.map.setCenter(moveLatLon);
+          } else {
+            window.open(
+              "/detail/?code=" + e.target.getAttribute("code"),
+              "_blank"
+            );
+          }
 
-      // clusterer.addMarkers(overlays);
+          // _this.getZoomLevelAndCreateMarker(_this.map.getLevel());
+        });
+      });
+    },
+    markerClick() {
+      alert("hello");
     },
   },
   mounted() {
+    // window.kakao.maps.event.addListener(this.map, "zoom_changed", function () {
+    //   console.log("이벤트", this.getLvel());
+    // });
+
     let _this = this;
     window.kakao.maps.load(function () {
       _this.initMap();
-      _this.createOverlay();
+      _this.getZoomLevelAndCreateMarker(12);
+
+      // window.kakao.maps.event.addListener(
+      //   _this.map,
+      //   "zoom_changed",
+      //   function () {
+      //     _this.getZoomLevelAndCreateMarker(_this.map.getLevel());
+      //   }
+      // );
+      // window.kakao.maps.event.addListener(_this.map, "dragend", function () {
+      //   _this.getZoomLevelAndCreateMarker(_this.map.getLevel());
+      // });
+      // window.kakao.maps.event.addListener(
+      //   _this.map,
+      //   "center_changed",
+      //   function () {
+      //     _this.getZoomLevelAndCreateMarker(_this.map.getLevel());
+      //   }
+      // );
+      window.kakao.maps.event.addListener(
+        _this.map,
+        "tilesloaded",
+        function () {
+          _this.getZoomLevelAndCreateMarker(_this.map.getLevel());
+        }
+      );
     });
-    this.geofind();
+    // this.geofind(); 현재위지 찾는 함수
   },
 };
 </script>
 
 <style>
 .location-label {
-  background-color: #ffffff;
+  background-color: rgb(0, 0, 255);
+  color: white;
   border-radius: 10px;
-  padding: 4px;
+  font-size: 14px;
+  padding: 5px 10px;
 }
 </style>
