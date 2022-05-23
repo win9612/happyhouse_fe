@@ -45,7 +45,7 @@ export default {
         if (status === window.kakao.maps.services.Status.OK) {
           _this.currentDong = result[0].address.region_3depth_name;
           // 콜백받은거 결과 ok이면 그 동 주소로 아파트 목록 조회
-          _this.getAptList();
+          // _this.getAptList();
         }
       };
       this.mapcoder.coord2Address(coord.getLng(), coord.getLat(), callback);
@@ -75,7 +75,7 @@ export default {
         url: "http://127.0.0.1:8080/apt-search/apt?keyword=" + dong,
         method: "get",
       }).then(function (res) {
-        // 아파트 목록 받아왔으면 vuex에 저장
+        //아파트 목록 받아왔으면 vuex에 저장
         _this.$store.dispatch("house/setAptList", { newList: res.data });
       });
     },
