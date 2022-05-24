@@ -8,10 +8,10 @@
       <!-- <div align="center" id="tmp">서비스 디테일 영역입니다.</div> -->
       <div id="img_container"></div>
       <div id="title_container" class="border-bottom">
-        <h1 class="font-weight-bold display-3 pt-2" align="center">
+        <h1 class="font-weight-bold display-3 pt-2">
           {{ title }}
         </h1>
-        <div align="center">
+        <div>
           <i
             id="interest-heart"
             class="fa-regular fa-heart fa-3x text-danger"
@@ -20,50 +20,34 @@
         </div>
       </div>
       <div id="inform_container" class="">
-        <div class="inform_block row">
-          <div class="col-sm-5 border-right">
-            <h2 align="center">상세정보</h2>
+        <div class="inform_block">
+          <div class="border-right">
+            <div>상세정보</div>
           </div>
-          <div class="col-sm-7 row informs" align="center">
-            <div class="row-sm-4 row">
-              <div class="col-sm-4"><strong>주소</strong></div>
-              <div class="col-sm-8" align="left">
+          <div class="informs">
+            <div class="">
+              <div class=""><strong>주소</strong></div>
+              <div class="c">
                 <span>{{ sidoName }} </span><span>{{ gugunName }} </span
                 ><span>{{ dongName }} </span><span>{{ jibun }}</span>
               </div>
             </div>
-            <div class="row-sm-4 row">
-              <div class="col-sm-4"><strong>매물 형태</strong></div>
-              <div class="col-sm-8" align="left">매매</div>
+            <div class="">
+              <div class=""><strong>매물 형태</strong></div>
+              <div class="">매매</div>
             </div>
             <div class="row-sm-4 row">
-              <div class="col-sm-4"><strong>건축년도</strong></div>
-              <div class="col-sm-8" align="left">{{ buildYear }}</div>
+              <div class=""><strong>건축년도</strong></div>
+              <div class="">{{ buildYear }}</div>
             </div>
           </div>
         </div>
-        <div class="inform_block row">
-          <div class="col-sm-5 border-right">
-            <h2 align="center">거래정보</h2>
+        <div class="inform_block">
+          <div class="border-right">
+            <div>거래정보</div>
           </div>
-          <div class="col-sm-7 row informs" align="center">
-            <button
-              class="btn btn-info text-light mb-3"
-              type="button"
-              v-if="!isDealListShow"
-              @click="isDealListShow = !isDealListShow"
-            >
-              거래정보 열기 ▼
-            </button>
-            <button
-              class="btn btn-info text-light mb-3"
-              type="button"
-              v-if="isDealListShow"
-              @click="isDealListShow = !isDealListShow"
-            >
-              거래정보 닫기 ▲
-            </button>
-            <div id="deal_list" v-if="isDealListShow">
+          <div class="informs d-flex">
+            <div id="deal_list">
               <div
                 class="mt-1 mb-3 ml-3 mr-3 pt-3 pb-3 rounded bg-light"
                 v-for="(vo, index) in deals"
@@ -78,6 +62,12 @@
                 <div>면적 : {{ vo.area }}㎡</div>
                 <div>층 : {{ vo.floor }}층</div>
               </div>
+            </div>
+            <div class="chart-container">
+              <LineChartGenerator
+                :chart-options="chartOptions"
+                :chart-data="chartData"
+              />
             </div>
           </div>
         </div>
@@ -214,11 +204,33 @@
 import axios from "axios";
 import http from "../../api/http-common";
 import HeaderVue from "../Header.vue";
+import { Line as LineChartGenerator } from "vue-chartjs/legacy";
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  LineElement,
+  LinearScale,
+  CategoryScale,
+  PointElement,
+} from "chart.js";
+
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  LineElement,
+  LinearScale,
+  CategoryScale,
+  PointElement
+);
 
 export default {
   name: "ServiceDetail",
   components: {
     HeaderVue,
+    LineChartGenerator,
   },
   data() {
     return {
@@ -241,6 +253,27 @@ export default {
       placeMarkers: [],
       placeList: [],
       placeMsgHtml: `<strong>이 매물의 <span class="text-primary">주변 상권</span>을검색해보세요!</strong>`,
+      chartData: {
+        labels: ["January", "February", "March"],
+        datasets: [
+          {
+            label: "연도별 거래 평균가",
+            backgroundColor: "#f87979",
+            data: [40, 20, 12],
+          },
+        ],
+      },
+      chartOptions: {
+        responsive: true,
+        scales: {
+          display: true,
+          xAxes: [
+            {
+              display: false,
+            },
+          ],
+        },
+      },
     };
   },
   created: async function () {
@@ -253,6 +286,18 @@ export default {
     let _this = this;
     window.kakao.maps.load(function () {
       _this.initMap();
+    });
+
+    http.get("/houseinfo/getChartData/" + this.aptCode).then(function (res) {
+      console.log("chart", res);
+      let years = [];
+      let mounts = [];
+      for (let i = 0; i < res.data.length; i++) {
+        years.push(res.data[i].dealYear);
+        mounts.push(res.data[i].amount);
+      }
+      _this.chartData.datasets[0].data = mounts;
+      _this.chartData.labels = years;
     });
   },
   methods: {
@@ -273,7 +318,7 @@ export default {
         .catch((error) => {
           console.log(error);
           alert("매물 정보를 불러오는 중 문제가 발생했습니다.");
-          this.$router.push({ name: "Service" });
+          // this.$router.push({ name: "Service" });
         });
     },
     getHouseDeal() {
@@ -320,6 +365,7 @@ export default {
         });
     },
     clickInterestHandler() {
+      let _this = this;
       if (this.isInterest) {
         http
           .delete(`/interest/delete`, {
@@ -340,7 +386,7 @@ export default {
           });
       } else {
         http
-          .post(`/interest/add`, { no: this.userNo, aptCode: this.aptCode })
+          .post(`/interest/add`, { no: _this.userNo, aptCode: _this.aptCode })
           .then(() => {
             console.log("add success");
             this.isInterest = true;
@@ -540,6 +586,9 @@ ain {
   padding-bottom: 30px;
   margin-bottom: 50px;
 }
+.informs {
+  width: 100%;
+}
 .informs > div {
   margin-bottom: 10px;
 }
@@ -557,5 +606,16 @@ ain {
 .p_list_container {
   height: 500px;
   overflow-y: scroll;
+}
+
+#deal_list {
+  height: 500px;
+  width: 100%;
+  max-width: 500px;
+  overflow-y: scroll;
+}
+.chart-container {
+  width: 100%;
+  max-width: 600px;
 }
 </style>
