@@ -11,8 +11,29 @@
               placeholder="동 또는 아파트 이름으로 검색"
               class="form-control shadow-none"
               @input="search($event)"
+              @focus="recommand()"
+              @blur="recommand()"
+              autocomplete="true"
             />
-            <i class="fa-solid fa-search"></i>
+            <i class="fa-regular fa-search"></i>
+            <div v-show="foucsOnInput" id="recommand" class="recommand-list">
+              <div
+                class="ps-4 p-2 item"
+                v-for="(item, index) in recommandList"
+                :key="index"
+                @mousedown="mousedown($event)"
+                @click="
+                  sender({
+                    dongName: item.dongname,
+                    lat: item.lat,
+                    lng: item.lng,
+                    level: 5,
+                  })
+                "
+              >
+                {{ item.dongname }}
+              </div>
+            </div>
           </div>
           <div v-if="checkDongList" class="itemList-title">지역</div>
           <div class="dongList-container">
@@ -72,6 +93,7 @@ import axios from "axios";
 import Map from "./Map.vue";
 import HeaderVue from "../Header.vue";
 import EventBus from "./EventBus";
+import http from "../../api/http-common";
 
 export default {
   name: "Service",
@@ -83,13 +105,24 @@ export default {
     return {
       aptList: this.$store.state.house.aptList,
       dongList: this.$store.state.house.dongList,
+      recommandList: "",
+      foucsOnInput: false,
     };
   },
   methods: {
     search: function (e) {
+      let recommandDom = document.querySelector("#recommand");
+
       let str = e.target.value;
       let last = str.charAt(str.length - 1);
       let _this = this;
+
+      if (str.length > 0) {
+        recommandDom.classList.add("d-none");
+      }
+      if (str.length == 0) {
+        recommandDom.classList.remove("d-none");
+      }
 
       // 동으로 아파트 목록 검색
       if (last == "동" || last == "가") {
@@ -133,6 +166,23 @@ export default {
     sender(dongName) {
       EventBus.$emit("move", dongName);
     },
+    recommand() {
+      let len = document.querySelector("#search-input").value.length;
+      if (len == 0 && this.foucsOnInput == false) {
+        document.querySelector(".fa-search").style.color = "#0d6efd";
+        this.foucsOnInput = true;
+      } else if (len == 0 && this.foucsOnInput == true) {
+        document.querySelector(".fa-search").style.color = "#adadad";
+
+        this.foucsOnInput = false;
+      }
+    },
+    mousedown(e) {
+      e.preventDefault();
+    },
+    reClick() {
+      console.log("추천클릭");
+    },
   },
   // vuex 값이 변경되면 aptList 갱신
   computed: {
@@ -152,9 +202,14 @@ export default {
     },
   },
   mounted() {
+    let _this = this;
     this.$store.state.house.aptList = "";
     this.$store.state.house.dongList = "";
     console.log(this);
+    http.get("/recommand/dong").then(function (res) {
+      // console.log("추천동", res);
+      _this.recommandList = res.data;
+    });
   },
 };
 </script>
@@ -169,6 +224,16 @@ html {
   height: 100%;
   width: 100%;
   min-width: 1280px;
+}
+
+.recommand-list {
+  background-color: #fff;
+}
+.recommand-item {
+  cursor: pointer;
+  /* border-bottom: 1px solid #e0e0e0; */
+  padding-left: 10px;
+  padding: 10px 0 10px 10px;
 }
 
 .aptList-container,
@@ -206,7 +271,7 @@ main {
 
 .search-input-container input {
   font-size: 16px !important;
-  padding-left: 50px;
+  padding-left: 55px;
   margin-bottom: 0;
   border-radius: 0;
   border: none;
@@ -215,8 +280,10 @@ main {
 }
 .search-input-container i {
   position: absolute;
+  font-size: 22px;
   top: 20px;
-  left: 10px;
+  left: 15px;
+  color: #adadad;
 }
 
 .title {
