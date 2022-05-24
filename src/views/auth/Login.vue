@@ -26,7 +26,7 @@
         <button class="btn btn-primary btn-lg" @click="login">로그인</button>
         <div class="text-end sub-menu">
           <a href="./regist" class="">회원가입</a> |
-          <a href="#" class="">비밀번호 찾기</a>
+          <a href="./findpw" class="">비밀번호 찾기</a>
         </div>
       </div>
       <hr />

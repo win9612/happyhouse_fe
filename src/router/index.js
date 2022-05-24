@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/auth/Login.vue";
 import Regist from "../views/auth/Regist.vue";
+import FindPassword from "../views/auth/FindPassword.vue";
 import Service from "../views/service/Service.vue";
 import ServiceDetail from "../views/service/ServiceDetail.vue";
 
@@ -51,6 +52,14 @@ const routes = [
     path: "/socialRegist",
     name: "SocialRegist",
     component: SocialRegist,
+    meta: {
+      unauthorized: true,
+    },
+  },
+  {
+    path: "/findpw",
+    name: "FindPassword",
+    component: FindPassword,
     meta: {
       unauthorized: true,
     },
