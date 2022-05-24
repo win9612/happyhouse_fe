@@ -14,11 +14,7 @@
         <div align="center">
           <i
             id="interest-heart"
-            class="fa-heart fa-3x text-danger"
-            :class="{
-              'fa-regular': !isInterest,
-              'fa-solid': isInterest,
-            }"
+            class="fa-regular fa-heart fa-3x text-danger"
             @click="clickInterestHandler"
           ></i>
         </div>
@@ -316,6 +312,10 @@ export default {
             this.isInterest = false;
           } else {
             this.isInterest = true;
+            document
+              .querySelector("#interest-heart")
+              .classList.remove("fa-regular");
+            document.querySelector("#interest-heart").classList.add("fa-solid");
           }
         });
     },
@@ -330,15 +330,27 @@ export default {
           })
           .then(() => {
             console.log("delete success");
+            this.isInterest = false;
+            document
+              .querySelector("#interest-heart")
+              .classList.remove("fa-solid");
+            document
+              .querySelector("#interest-heart")
+              .classList.add("fa-regular");
           });
       } else {
         http
           .post(`/interest/add`, { no: this.userNo, aptCode: this.aptCode })
           .then(() => {
             console.log("add success");
+            this.isInterest = true;
+            document
+              .querySelector("#interest-heart")
+              .classList.remove("fa-regular");
+            document.querySelector("#interest-heart").classList.add("fa-solid");
           });
       }
-      this.$router.go(0);
+      // this.$router.go(0);
     },
 
     /* 카카오맵 함수 시작 */

@@ -1,8 +1,8 @@
 <template>
   <div class="qnaList-contents-container">
-    <div class="notice-post">
-      <div class="notice-title">제목입니다</div>
-      <div class="notice-date">2022.05.06</div>
+    <div class="profile-notice-post">
+      <div class="profile-notice-title">제목입니다</div>
+      <div class="profile-notice-date">2022.05.06</div>
     </div>
   </div>
 </template>
@@ -17,7 +17,7 @@ export default {
 .qnaList-contents-container {
   margin-top: 30px;
 }
-.notice-post {
+.profile-notice-post {
   text-align: left;
   box-sizing: border-box;
   padding: 20px 30px;
@@ -25,11 +25,11 @@ export default {
   border-radius: 7px;
   cursor: pointer;
 }
-.notice-title {
+.profile-notice-title {
   font-weight: bold;
   font-size: 18px;
 }
-.notice-date {
+.profile-notice-date {
   font-size: 14px;
   font-weight: bold;
   color: #848484;
