@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <!-- 나눔 스퀘어 라운드 -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.min.css">
+    <!-- fontawsome -->
+    <script src="https://kit.fontawesome.com/b65e009655.js" crossorigin="anonymous"></script>
+    <!-- 카카오 -->
+    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a8a009f84e0340aafcbbf92fa5b1365e&autoload=false&libraries=services,clusterer"></script>
+    <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <style>
+      * {
+        font-family: 'NanumSquareRound',sans-serif;
+      }
+
+      #app {
+        position: relative;
+        height: 100%;
+      }
+
+    </style>
+
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>
