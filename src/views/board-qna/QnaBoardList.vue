@@ -1,10 +1,32 @@
 <template>
   <div>
-    <button class="btn btn-primary" v-if="ableWrite" @click="moveWrite()">
-      글쓰기
-    </button>
+    <div id="service_bar" class="d-flex">
+      <input
+        name="keyword"
+        id="keyword"
+        class="search_input"
+        type="text"
+        v-model.trim="keyword"
+        @keyup.enter="searchArticles()"
+      />
+      <button
+        class="search_btn btn btn-outline-primary"
+        @click="searchArticles()"
+      >
+        검색
+      </button>
+      <button
+        class="write_btn btn btn-primary"
+        align="right"
+        v-if="ableWrite"
+        @click="moveWrite()"
+      >
+        글쓰기
+      </button>
+    </div>
 
     <!-- 게시판 element 시작 -->
+    <div v-if="noArticles"><strong>존재하는 글이 없습니다.</strong></div>
     <section class="board_container mb-5">
       <div
         class="notice-post"
@@ -61,6 +83,8 @@ export default {
       qnaBoard: [], // 게시글 목록
       pageNavigation: [], // 페이지 내비게이션 목록
       ableWrite: false, // 글쓰기 사용가능 여부
+      keyword: "",
+      noArticles: false,
     };
   },
   created() {
@@ -84,6 +108,12 @@ export default {
           },
         })
         .then(({ data }) => {
+          if (data.result.totalPage === 0) {
+            this.noArticles = true;
+          } else {
+            this.noArticles = false;
+          }
+
           this.page = data.result.currentPage;
           this.qnaBoard = data.result.articleList;
           this.totalPage = data.result.totalPage;
@@ -120,6 +150,36 @@ export default {
       this.page = pg;
       this.getArticleList();
     },
+    searchArticles() {
+      http
+        .get(`/qna-board/search`, {
+          params: {
+            page: this.page,
+            keyword: this.keyword,
+          },
+        })
+        .then(({ data }) => {
+          if (data.result.totalPage === 0) {
+            this.noArticles = true;
+          } else {
+            this.noArticles = false;
+          }
+          this.page = data.result.currentPage;
+          this.qnaBoard = data.result.articleList;
+          this.totalPage = data.result.totalPage;
+          this.pageNavigation = [];
+          for (let i = data.result.startPage; i <= data.result.endPage; i++) {
+            if (this.page === i) {
+              this.pageNavigation.push(
+                "<strong class='page-active'>" + i + "</strong>"
+              );
+            } else {
+              this.pageNavigation.push(i);
+            }
+          }
+        })
+        .catch(() => {});
+    },
   },
 };
 </script>
@@ -148,6 +208,19 @@ export default {
 .page-active {
   color: #0d6efd;
 }
+/* 상단 서비스 바 */
+.search_input {
+  width: 300px;
+  margin-right: 10px;
+}
+.search_btn {
+  width: 80px;
+  margin-right: 20px;
+}
+.write_btn {
+  width: 80px;
+}
+
 @media only screen and (max-width: 575px) {
   .notice-container {
     margin-top: 40px;
