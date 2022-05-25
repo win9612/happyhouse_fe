@@ -42,6 +42,19 @@
             </div>
           </div>
         </div>
+        <div class="environment_block">
+          <div class="border-right">
+            <div>환경 정보</div>
+          </div>
+          <div class="dust_container">
+            이 지역의 미세먼지 농도는
+            <span v-html="dustStatusMsg"></span> 입니다. (<span
+              v-html="dustInfo[0].dataTime"
+            ></span
+            >)
+            <img :src="nowDustImg" alt="미세먼지 현황 이미지" />
+          </div>
+        </div>
         <div class="inform_block">
           <div class="border-right">
             <div>거래정보</div>
@@ -274,6 +287,13 @@ export default {
           ],
         },
       },
+      // 미세먼지 관련 변수
+      dustInfo: [], // 최근 7일 미세먼지 발표 (index: index일 전)
+      dustStatus: [], //  ** 차트용 데이터 ** 최근 7일 미세먼지 상태 (0일전, 1일전 ... 6일 전)
+      dustStatusMsg: "", // 화면에 표시할 오늘자 미세먼지 현황
+      nowDustImg: "", // 현재 미세먼지 이미지 주소
+      dustDateTime: "", // 현재 미세먼지 발표시간
+      minusDays: 0,
     };
   },
   created: async function () {
@@ -282,25 +302,137 @@ export default {
     await this.getHouseDeal();
     await this.getInterestInfo();
   },
-  mounted() {
+  async mounted() {
     let _this = this;
     window.kakao.maps.load(function () {
       _this.initMap();
     });
 
-    http.get("/houseinfo/getChartData/" + this.aptCode).then(function (res) {
-      console.log("chart", res);
-      let years = [];
-      let mounts = [];
-      for (let i = 0; i < res.data.length; i++) {
-        years.push(res.data[i].dealYear);
-        mounts.push(res.data[i].amount);
-      }
-      _this.chartData.datasets[0].data = mounts;
-      _this.chartData.labels = years;
-    });
+    await http
+      .get("/houseinfo/getChartData/" + this.aptCode)
+      .then(function (res) {
+        console.log("chart", res);
+        let years = [];
+        let mounts = [];
+        for (let i = 0; i < res.data.length; i++) {
+          years.push(res.data[i].dealYear);
+          mounts.push(res.data[i].amount);
+        }
+        _this.chartData.datasets[0].data = mounts;
+        _this.chartData.labels = years;
+      });
+
+    // 오늘자 미세농도 데이터 불러오기
+    await http
+      .get(`/airkorea/dust`, {
+        params: {
+          d: _this.getDate(),
+        },
+      })
+      .then(({ data }) => {
+        let items = JSON.parse(data.result).response.body.items;
+        _this.dustInfo.push(items[0]);
+
+        // 현재 미세먼지 농도 이미지
+        _this.nowDustImg = items[0].imageUrl1;
+
+        // 각 지역 별 미세먼지 현황 파싱
+        return _this.parseDustGradeList(0);
+      })
+      .then((gradeObjectList) => {
+        _this.getLocalDustGrade(gradeObjectList);
+      })
+      .then(() => {
+        // 미세먼지 안내 html 생성
+        if (_this.dustStatus[0] === "좋음") {
+          _this.dustStatusMsg = `<strong class="text-primary">좋음</strong>`;
+        } else if (_this.dustStatus[0] === "보통") {
+          _this.dustStatusMsg = `<strong class="text-success">보통</strong>`;
+        } else if (_this.dustStatus[0] === "나쁨") {
+          _this.dustStatusMsg = `<strong class="text-warning">나쁨</strong>`;
+        } else if (_this.dustStatus[0] === "매우나쁨") {
+          _this.dustStatusMsg = `<strong class="text-danger">매우나쁨</strong>`;
+        }
+      });
+
+    // 1일전 ~ 6일전 미세농도 데이터 불러오기
+    for (let i = 1; i <= 6; i++) {
+      let ago = _this.getDate();
+      await http
+        .get(`/airkorea/dust`, {
+          params: {
+            d: ago,
+          },
+        })
+        .then(({ data }) => {
+          let items = JSON.parse(data.result).response.body.items;
+          _this.dustInfo.push(items[0]);
+          return _this.parseDustGradeList(_this.minusDays - 1);
+        })
+        .then((gradeObjectList) => {
+          _this.getLocalDustGrade(gradeObjectList);
+        });
+    }
   },
   methods: {
+    /* 미세먼지 관련 함수 시작 */
+    getDate() {
+      let date = new Date();
+      date.setDate(date.getDate() - this.minusDays++);
+
+      let year = date.getFullYear(); // 년도
+      let month = date.getMonth() + 1; // 월
+      let day = date.getDate(); // 날짜
+
+      if (month < 10) month = "0" + month;
+      if (day < 10) day = "0" + day;
+      return year + "-" + month + "-" + day;
+    },
+    parseDustGradeList(daysAgo) {
+      let _this = this;
+      let gradeList = _this.dustInfo[daysAgo].informGrade.split(",");
+      let gradeObjectList = []; // 파싱된 지역별 미세먼지 현황 오브젝트
+
+      for (let i = 0; i < gradeList.length; i++) {
+        if (i == 14 || i == 16) continue; // 영동과 경기남부 제외
+        let tmpList = gradeList[i].split(" : ");
+        let tmpObj = {};
+        tmpObj.name = tmpList[0].substr(0, 2);
+        tmpObj.status = tmpList[1];
+        gradeObjectList.push(tmpObj);
+      }
+      return gradeObjectList;
+    },
+    getLocalDustGrade(gradeObjectList) {
+      let _this = this;
+      // 시도 이름 변환
+      let sido = _this.sidoName;
+      let exceptionDo = [
+        "전라남도",
+        "전라북도",
+        "경상남도",
+        "경상북도",
+        "충청남도",
+        "충청북도",
+      ];
+      if (exceptionDo.includes(sido)) {
+        sido = sido.charAt(0) + sido.charAt(2);
+      } else if (sido === "강원도") {
+        sido = "영서";
+      } else {
+        sido = sido.substr(0, 2);
+      }
+
+      // 현재 시도 이름과 일치하는 미세먼지 정보 반환
+      for (let i = 0; i < gradeObjectList.length; i++) {
+        if (gradeObjectList[i].name === sido) {
+          _this.dustStatus.push(gradeObjectList[i].status);
+          break;
+        }
+      }
+    },
+    /* 미세먼지 관련 함수 끝*/
+
     getHouseInfo() {
       let _this = this;
       http
