@@ -41,7 +41,7 @@ export default {
 <style>
 .section1 {
   background-color: #fff;
-  padding: 94px 0px 100px;
+  padding: 54px 0px 50px;
 }
 
 .section1-image {
