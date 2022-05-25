@@ -11,68 +11,115 @@
         <h1 class="font-weight-bold display-3 pt-2">
           {{ title }}
         </h1>
-        <div>
+        <div class="">
           <i
             id="interest-heart"
-            class="fa-regular fa-heart fa-3x text-danger"
+            class="fa-regular fa-heart text-danger fa-2x"
             @click="clickInterestHandler"
           ></i>
         </div>
       </div>
       <div id="inform_container" class="">
-        <div class="inform_block">
-          <div class="border-right">
-            <div>상세정보</div>
-          </div>
-          <div class="informs">
-            <div class="">
-              <div class=""><strong>주소</strong></div>
-              <div class="c">
-                <span>{{ sidoName }} </span><span>{{ gugunName }} </span
-                ><span>{{ dongName }} </span><span>{{ jibun }}</span>
-              </div>
+        <section class="section-flex">
+          <div class="inform_block">
+            <div class="border-right">
+              <div class="inform-title">주택 정보</div>
             </div>
-            <div class="">
-              <div class=""><strong>매물 형태</strong></div>
-              <div class="">매매</div>
-            </div>
-            <div class="row-sm-4 row">
-              <div class=""><strong>건축년도</strong></div>
-              <div class="">{{ buildYear }}</div>
-            </div>
-          </div>
-        </div>
-        <div class="environment_block">
-          <div class="border-right">
-            <div>환경 정보</div>
-          </div>
-          <div class="dust_container">
-            이 지역의 미세먼지 농도는
-            <span v-html="dustStatusMsg"></span> 입니다.
-            <img :src="nowDustImg" alt="미세먼지 현황 이미지" />
-          </div>
-        </div>
-        <div class="inform_block">
-          <div class="border-right">
-            <div>거래정보</div>
-          </div>
-          <div class="informs d-flex">
-            <div id="deal_list">
-              <div
-                class="mt-1 mb-3 ml-3 mr-3 pt-3 pb-3 rounded bg-light"
-                v-for="(vo, index) in deals"
-                :key="index"
-              >
-                <div>{{ index + 1 }}</div>
-                <div>
-                  거래 날짜 : {{ vo.dealYear }}년 {{ vo.dealMonth }}월
-                  {{ vo.dealDay }}일
+            <div class="informs">
+              <div class="informs-row">
+                <div class="informs-subtitle">주소</div>
+                <div class="c">
+                  <span>{{ sidoName }} </span><span>{{ gugunName }} </span
+                  ><span>{{ dongName }} </span><span>{{ jibun }}</span>
                 </div>
-                <div>거래 금액 : {{ vo.dealAmount }}만원</div>
-                <div>면적 : {{ vo.area }}㎡</div>
-                <div>층 : {{ vo.floor }}층</div>
+              </div>
+              <div class="informs-row">
+                <div class="informs-subtitle">매물 형태</div>
+                <div class="">매매</div>
+              </div>
+              <div class="informs-row">
+                <div class="informs-subtitle">건축년도</div>
+                <div class="">{{ buildYear }}</div>
               </div>
             </div>
+          </div>
+          <div class="inform_block">
+            <div class="">
+              <div class="inform-title">환경 정보</div>
+            </div>
+            <div class="informs-subtitle">
+              오늘 {{ dongName }}의 미세먼지 농도는
+              <span v-html="dustStatusMsg"></span> 입니다.
+            </div>
+            <!-- <img :src="nowDustImg" alt="미세먼지 현황 이미지" width="200" /> -->
+            <div class="informs-subtitle">주간 미세먼지 농도</div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="dust-item"
+                    v-for="(item, index) in dustInfo.slice().reverse()"
+                    :key="`o-${index}`"
+                  >
+                    {{ item.dataTime | formatDate }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td
+                    class="dust-item"
+                    v-for="(item, index) in dustStatus.slice().reverse()"
+                    :key="index"
+                    :inner-html.prop="item | dustColor"
+                  >
+                    {{ item | dustColor }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="section-flex">
+              <div class="dust-date"></div>
+              <div class="dust-data"></div>
+            </div>
+          </div>
+        </section>
+        <div class="section-flex">
+          <div class="inform_block">
+            <div class="border-right">
+              <div class="inform-title">거래정보</div>
+            </div>
+            <div class="informs d-flex">
+              <div id="deal_list">
+                <div
+                  class="deal-item"
+                  v-for="(vo, index) in deals.slice().reverse()"
+                  :key="index"
+                >
+                  <!-- <div>{{ index + 1 }}</div> -->
+                  <div>
+                    <span class="deal-item-title fw-bold">거래 날짜</span>
+                    {{ vo.dealYear }}년 {{ vo.dealMonth }}월 {{ vo.dealDay }}일
+                  </div>
+                  <div>
+                    <span class="deal-item-title fw-bold">거래 금액</span>
+                    {{ vo.dealAmount }}만원
+                  </div>
+                  <div>
+                    <span class="deal-item-title fw-bold">면적</span>
+                    {{ vo.area }}㎡
+                  </div>
+                  <div>
+                    <span class="deal-item-title fw-bold">층</span>
+                    {{ vo.floor }}층
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="inform_block">
+            <div class="inform-title">연도별 거래평균</div>
             <div class="chart-container">
               <LineChartGenerator
                 :chart-options="chartOptions"
@@ -81,127 +128,124 @@
             </div>
           </div>
         </div>
-        <div class="inform_block row">
-          <div class="col-sm-5 border-right" align="center">
-            <h2 align="center">상권정보</h2>
-            <div
-              class="btn btn-primary w-50 mt-3"
-              v-if="placeList.length > 0 && !placeListShow"
-              @click="placeListShow = !placeListShow"
-            >
-              펼쳐보기
-            </div>
-            <div
-              class="btn btn-primary w-50 mt-3"
-              v-if="placeListShow"
-              @click="placeListShow = !placeListShow"
-            >
-              접기
-            </div>
-            <div class="p_list_container" v-if="placeListShow">
+        <div class="section-flex map-section">
+          <div class="inform_block">
+            <div class="inform-title">상권 검색</div>
+            <div class="col-sm-7 row informs">
+              <div id="select_buttons_container">
+                <!-- 이 부분에 fontAwesome을 사용하면 좋을거같다. -->
+                <button
+                  class="btn btn-primary"
+                  value="편의점"
+                  @click="searchPlaces"
+                >
+                  <i class="fa-solid fa-store"></i> 편의점
+                </button>
+                <button
+                  class="btn btn-primary"
+                  value="카페"
+                  @click="searchPlaces"
+                >
+                  <i class="fa-regular fa-mug"></i> 카페
+                </button>
+                <button
+                  class="btn btn-primary"
+                  value="다이소"
+                  @click="searchPlaces"
+                >
+                  <!-- <i class="fa-brands fa-shopify"></i> 다이소
+                </button>
+                <button
+                  class="btn btn-primary"
+                  value="마트"
+                  @click="searchPlaces"
+                > -->
+                  <i class="fa-solid fa-shop"></i> 마트
+                </button>
+                <button
+                  class="btn btn-primary"
+                  value="음식점"
+                  @click="searchPlaces"
+                >
+                  <i class="fa-solid fa-shop"></i> 음식점
+                </button>
+              </div>
+              <div id="keyword_container" class="d-flex">
+                <input
+                  class="form-control keyword-input"
+                  type="text"
+                  placeholder="가게 이름 혹은 업종을 입력하세요"
+                  v-model.trim.lazy="placeKeyword"
+                  @keyup.enter="searchPlaces"
+                />
+                <input
+                  type="submit"
+                  class="btn btn-outline-primary keyword-submit"
+                  value="검색"
+                  @click="searchPlaces"
+                />
+              </div>
               <div
-                class="p_list_element mt-3 border-top border-bottom row"
+                id="place_msg"
+                class="mb-1"
+                v-html="placeMsgHtml"
                 align="center"
-                v-for="(place, index) in placeList"
-                :key="index"
-              >
-                <div class="col-sm-4 mt-1 mb-1" align="right"><b>이름</b></div>
-                <div class="col-sm-8 mt-1 mb-1" align="left">
-                  {{ place.place_name }}
-                </div>
-                <div class="col-sm-4 mt-1 mb-1" align="right"><b>주소</b></div>
-                <div class="col-sm-8 mt-1 mb-1" align="left">
-                  {{ place.road_address_name }}
-                </div>
-                <div class="col-sm-4 mt-1 mb-1" align="right">
-                  <b>카테고리</b>
-                </div>
-                <div class="col-sm-8 mt-1 mb-1" align="left">
-                  {{ place.category_group_name }}
-                </div>
-                <div class="col-sm-4 mt-1 mb-1" align="right">
-                  <b>매물에서의 거리</b>
-                </div>
-                <div class="col-sm-8 mt-1 mb-1" align="left">
-                  {{ place.distance }} m
-                </div>
-                <div class="col-sm-4 mt-1 mb-1" align="right"></div>
-                <div class="col-sm-8 mt-1 mb-1" align="left">
-                  <b
-                    ><a :href="place.place_url" target="_blank"
-                      >자세히 보기</a
-                    ></b
-                  >
-                </div>
+              ></div>
+              <div id="kakao_map_container" class="mt-1" align="top">
+                <div
+                  id="map"
+                  class="round"
+                  style="width: 100%; height: 100%; opacity: 0.9"
+                ></div>
               </div>
             </div>
           </div>
-
-          <div class="col-sm-7 row informs" align="center">
-            <div id="select_buttons_container" align="center">
-              <!-- 이 부분에 fontAwesome을 사용하면 좋을거같다. -->
-              <button
-                class="m-2 btn btn-primary"
-                value="편의점"
-                @click="searchPlaces"
-              >
-                <i class="fa-solid fa-store"></i> 편의점
-              </button>
-              <button
-                class="m-2 btn btn-primary"
-                value="카페"
-                @click="searchPlaces"
-              >
-                <i class="fa-regular fa-mug"></i> 카페
-              </button>
-              <button
-                class="m-2 btn btn-primary"
-                value="다이소"
-                @click="searchPlaces"
-              >
-                <i class="fa-brands fa-shopify"></i> 다이소
-              </button>
-              <button
-                class="m-2 btn btn-primary"
-                value="마트"
-                @click="searchPlaces"
-              >
-                <i class="fa-solid fa-shop"></i> 마트
-              </button>
-              <button
-                class="m-2 btn btn-primary"
-                value="음식점"
-                @click="searchPlaces"
-              >
-                <i class="fa-solid fa-shop"></i> 음식점
-              </button>
-            </div>
-            <div id="keyword_container" align="center">
-              <input
-                class="input_form"
-                type="text"
-                v-model.trim.lazy="placeKeyword"
-                @keyup.enter="searchPlaces"
-              />
-              <input
-                type="submit"
-                class="input_button btn btn-success"
-                value="검색"
-                @click="searchPlaces"
-              />
-            </div>
-            <div
-              id="place_msg"
-              class="mb-1"
-              v-html="placeMsgHtml"
-              align="center"
-            ></div>
-            <div id="kakao_map_container" class="mt-1" align="top">
-              <div
-                id="map"
-                class="round"
-                style="width: 100%; height: 100%; opacity: 0.9"
-              ></div>
+          <div class="sang-list">
+            <div class="">
+              <div class="inform-title">상권 목록</div>
+              <div class="p_list_container">
+                <div class="text-center fw-bold mt-3" v-if="sangFlag">
+                  검색 내역이 없습니다.
+                </div>
+                <div
+                  class="p_list_element mt-3 row"
+                  v-for="(place, index) in placeList"
+                  :key="index"
+                >
+                  <div class="col-sm-4 mt-1 mb-1" align="right">
+                    <b>이름</b>
+                  </div>
+                  <div class="col-sm-8 mt-1 mb-1" align="left">
+                    {{ place.place_name }}
+                  </div>
+                  <div class="col-sm-4 mt-1 mb-1" align="right">
+                    <b>주소</b>
+                  </div>
+                  <div class="col-sm-8 mt-1 mb-1" align="left">
+                    {{ place.road_address_name }}
+                  </div>
+                  <div class="col-sm-4 mt-1 mb-1" align="right">
+                    <b>카테고리</b>
+                  </div>
+                  <div class="col-sm-8 mt-1 mb-1" align="left">
+                    {{ place.category_group_name }}
+                  </div>
+                  <div class="col-sm-4 mt-1 mb-1" align="right">
+                    <b>거리</b>
+                  </div>
+                  <div class="col-sm-8 mt-1 mb-1" align="left">
+                    {{ place.distance }} m
+                  </div>
+                  <div class="col-sm-4 mt-1 mb-1" align="right"></div>
+                  <div class="col-sm-8 mt-1 mb-1" align="left">
+                    <b
+                      ><a :href="place.place_url" target="_blank"
+                        >자세히 보기</a
+                      ></b
+                    >
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -246,6 +290,7 @@ export default {
     return {
       userNo: 0, // 쿼리문에서 받아올 유저 코드
       aptCode: 0, // 쿼리문에서 받아올 아파트 코드
+      sangFlag: true,
       imgPaths: [],
       title: "",
       sidoName: "",
@@ -571,7 +616,7 @@ export default {
       if (e.target.value === "검색") {
         keyword = this.placeKeyword;
       }
-      if (keyword === null || keyword.length < 1) {
+      if (keyword === null || keyword === "" || keyword.length < 1) {
         this.placeMsgHtml = `<strong class="text-danger">검색어를 입력해주세요!</strong>`;
         return;
       }
@@ -598,6 +643,7 @@ export default {
         });
     },
     async makePlaceMarkers(places, keyword) {
+      this.sangFlag = false;
       const len = places.length;
       // 기존 장소 마커들 전부 삭제
       for (let i = 0; i < this.placeMarkers.length; i++) {
@@ -684,10 +730,28 @@ export default {
         r = 2;
       }
 
-      if (len === 0)
+      if (len === 0) {
         this.placeMsgHtml = `<strong class="text-danger">매물 근처에 ${keyword} 존재하지 않습니다.</strong>`;
-      else
+        this.sangFlag = true;
+      } else
         this.placeMsgHtml = `<strong>${keyword}</strong>에 대한 분포는 ${result[r]} 입니다.`;
+    },
+  },
+  filters: {
+    formatDate(data) {
+      let date = data.split(" ")[0];
+      let month = date.split("-")[1];
+      let day = date.split("-")[2];
+      return month + "-" + day;
+    },
+    dustColor(data) {
+      if (data === "좋음") {
+        return "<span class='text-primary fw-bold'>좋음</span>";
+      } else if (data === "보통") {
+        return "<span class='text-success fw-bold'>보통</span>";
+      } else if (data === "나쁨") {
+        return "<span class='text-danger fw-bold'>나쁨</span>";
+      }
     },
   },
 };
@@ -697,6 +761,9 @@ export default {
 ain {
   position: relative;
   height: calc(100% - 56px);
+}
+.section-flex {
+  display: flex;
 }
 .service-container {
   position: fixed;
@@ -710,13 +777,30 @@ ain {
   padding-top: 30px;
   padding-bottom: 30px;
 }
+#inform_container,
+#title_container {
+  width: 80%;
+  margin: 0 auto;
+}
+#title_container {
+  text-align: center;
+}
 .inform_block {
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding: 30px 10px;
   margin-bottom: 50px;
+  width: 100%;
+}
+.inform-title {
+  font-weight: bold;
+  font-size: 20px;
+  border-bottom: 2px solid;
 }
 .informs {
   width: 100%;
+}
+.informs-subtitle {
+  font-weight: bold;
+  margin-top: 20px;
 }
 .informs > div {
   margin-bottom: 10px;
@@ -740,11 +824,132 @@ ain {
 #deal_list {
   height: 500px;
   width: 100%;
-  max-width: 500px;
   overflow-y: scroll;
 }
 .chart-container {
   width: 100%;
-  max-width: 600px;
+  max-width: 500px;
+}
+.dust-date {
+  font-weight: bold;
+  padding: 20px 10px;
+}
+.dust-data {
+  padding: 20px 10px;
+}
+.dust-item {
+  padding: 2px;
+  border-bottom: 1px solid;
+}
+.deal-item {
+  /* background-color: rgba(2, 32, 71, 0.03); */
+  border-bottom: 1px solid #e0e0e0;
+  margin: 10px 0;
+  padding-bottom: 10px;
+}
+.deal-item-title {
+  display: inline-block;
+  width: 65px;
+  text-align: right;
+  margin-right: 5px;
+}
+.sang-list {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  padding: 30px 10px;
+}
+.keyword-input {
+  font-size: 16px !important;
+  font-weight: normal !important;
+  height: 40px;
+}
+.keyword-submit {
+  height: 40px;
+  margin-left: 10px;
+}
+.p_list_container {
+  height: 800px;
+}
+.p_list_element {
+  border-bottom: 1px solid #e0e0e0;
+}
+#select_buttons_container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+#select_buttons_container button {
+  margin-right: 10px;
+  margin-bottom: 5px;
+  width: 95px;
+  word-break: keep-all;
+}
+
+@media only screen and (min-width: 769px) and (max-width: 992px) {
+  .section-flex {
+    /* flex-wrap: wrap; */
+  }
+  #inform_container,
+  #title_container {
+    width: 100%;
+  }
+  .chart-container {
+    max-width: 370px;
+  }
+  #deal_list {
+    height: 370px;
+  }
+  #kakao_map_container {
+    height: 350px;
+  }
+  #select_buttons_container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+@media only screen and (min-width: 647px) and (max-width: 768px) {
+  .container {
+    width: 100% !important;
+    max-width: 100%;
+  }
+  #inform_container,
+  #title_container {
+    width: 100%;
+  }
+  .map-section {
+    flex-wrap: wrap;
+  }
+  .map-section .inform_block {
+    margin-bottom: 0;
+  }
+  .sang-list {
+    max-width: 100%;
+    padding-top: 0;
+  }
+  #deal_list {
+    height: 340px;
+    min-width: 220px;
+  }
+  .chart-container {
+    min-width: 0;
+  }
+}
+@media only screen and (max-width: 647px) {
+  .section-flex {
+    flex-wrap: wrap;
+  }
+  .inform_block {
+    padding: 0;
+    padding-top: 20px;
+    margin-bottom: 0;
+  }
+  #deal_list {
+    height: 240px;
+  }
+  #kakao_map_container {
+    height: 350px;
+  }
 }
 </style>
