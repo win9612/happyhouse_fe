@@ -12,13 +12,13 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   function (config) {
     // 요청 보내기 전에 수행할 일
-    console.log("토큰있냐?", localStorage.getItem("jwt"));
+    // console.log("토큰있냐?", localStorage.getItem("jwt"));
     try {
       let token = JSON.parse(localStorage.getItem("jwt")).accessToken;
       config.headers["Content-Type"] = "application/json; charset=utf-8";
       config.headers["token"] = token;
 
-      console.log("jwt담아서 일단보냄 =>", localStorage.getItem("jwt"));
+      // console.log("jwt담아서 일단보냄 =>", localStorage.getItem("jwt"));
 
       return config;
     } catch (error) {
@@ -35,7 +35,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   function (res) {
     // 응답데이터 가공
-    console.log("res 넘어왔음", res);
+    // console.log("res 넘어왔음", res);
     if (res.config.url == "/app/auth/refreshToken") {
       console.log("토큰 발행 res라서 토큰 저장함");
       localStorage.setItem("jwt", JSON.stringify(res.data.result));
@@ -65,7 +65,7 @@ axiosInstance.interceptors.response.use(
               // location.href = "/login";
             } else {
               // res
-              console.log("리프레시 정상적으로 완료한 res는 이거", res);
+              // console.log("리프레시 정상적으로 완료한 res는 이거", res);
               // localStorage.setItem("jwt", JSON.stringify(res.data.result));
             }
           })
