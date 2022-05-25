@@ -2,7 +2,9 @@
 <template>
   <div
     id="map"
-    style="width: 100%; min-width: 1200px; height: 100%; opacity: 0.7"
+    tabindex="-1"
+    style="width: 100%; height: 100%; opacity: 0.7"
+    @click="focus()"
   ></div>
 </template>
 
@@ -27,10 +29,19 @@ export default {
   methods: {
     initMap() {
       const container = document.getElementById("map");
-      const options = {
-        center: new window.kakao.maps.LatLng(36.4976537, 128.00067951),
-        level: 12,
-      };
+      let options = null;
+      if (window.innerWidth < 575) {
+        options = {
+          center: new window.kakao.maps.LatLng(35.689522, 128.171503),
+          level: 13,
+        };
+      } else {
+        options = {
+          center: new window.kakao.maps.LatLng(35.689522, 128.171503),
+          level: 12,
+        };
+      }
+
       this.map = new window.kakao.maps.Map(container, options);
       this.map.removeOverlayMapTypeId(window.kakao.maps.MapTypeId.TRAFFIC);
 
@@ -132,11 +143,11 @@ export default {
       let nowLevel = _this.map.getLevel();
 
       if (nowLevel >= 9) {
-        nowLevel = 7;
+        nowLevel = 8;
       } else if (nowLevel >= 7) {
-        nowLevel = 5;
+        nowLevel = 6;
       } else if (nowLevel > 4) {
-        nowLevel = 3;
+        nowLevel = 4;
       }
 
       // console.log(res);
@@ -181,8 +192,8 @@ export default {
         });
       });
     },
-    markerClick() {
-      alert("hello");
+    focus() {
+      document.getElementById("map").focus();
     },
   },
   created() {

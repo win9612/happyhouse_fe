@@ -80,7 +80,7 @@
             </div>
           </div>
         </aside>
-        <div class="map-box bg-light h-100 w-100 min-width:1200px">
+        <div class="map-box bg-light h-100 w-100">
           <Map />
         </div>
       </div>
@@ -223,7 +223,6 @@ html {
 .service-container {
   height: 100%;
   width: 100%;
-  min-width: 1280px;
 }
 
 .recommand-list {
@@ -261,6 +260,7 @@ main {
   z-index: 30;
   width: 100%;
   max-width: 400px;
+  box-sizing: border-box;
   position: absolute;
   border: 1px solid #e0e0e0;
 }
@@ -376,5 +376,15 @@ main {
 }
 .custom_zoomcontrol span:first-child {
   border-bottom: 1px solid #bfbfbf;
+}
+
+@media only screen and (max-width: 575px) {
+  .search-box {
+    width: 100%;
+    margin: 0 auto;
+    top: 0;
+    left: 0;
+    max-width: 100%;
+  }
 }
 </style>

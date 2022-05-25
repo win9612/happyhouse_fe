@@ -41,7 +41,7 @@ export default {
 <style>
 .section1 {
   background-color: #fff;
-  padding: 94px 0px 100px;
+  padding: 54px 0px 50px;
 }
 
 .section1-image {
@@ -149,7 +149,7 @@ export default {
   }
 
   .title-text {
-    padding-top: 40px;
+    padding-top: 70px;
     width: 80% !important;
     margin: 0 auto;
     position: relative;
@@ -163,7 +163,7 @@ export default {
     opacity: 0.4;
     width: 90%;
     height: calc(100vw);
-    margin-top: calc(-95vw);
+    margin-top: calc(-93vw);
     z-index: -200;
   }
   .btn-box {

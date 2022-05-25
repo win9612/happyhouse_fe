@@ -29,7 +29,7 @@
         <div id="name_result_msg" v-html="nameResultMsg"></div>
       </div>
       <div class="profile-row text-left">
-        <div class="profile-attr">비밀번호</div>
+        <div class="profile-attr">비밀번호 변경</div>
         <div class="d-flex">
           <input
             name="password"
@@ -42,7 +42,7 @@
             @click="modify('password')"
             class="btn btn-outline-primary"
           >
-            수정
+            변경
           </button>
           <button
             id="submit_password"
@@ -53,7 +53,7 @@
           </button>
         </div>
         <input
-          class="mt-2 mb-2"
+          class="mt-2"
           name="new-password1"
           type="password"
           placeholder="새 비밀번호"
@@ -245,5 +245,15 @@ export default {
 .profile-row button {
   width: 70px;
   margin-left: 5px;
+}
+.profile-attr {
+  text-align: left;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+input[name="new-password1"],
+input[name="new-password2"] {
+  height: 35px;
 }
 </style>

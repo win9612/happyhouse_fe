@@ -148,4 +148,9 @@ export default {
 .page-active {
   color: #0d6efd;
 }
+@media only screen and (max-width: 575px) {
+  .notice-container {
+    margin-top: 40px;
+  }
+}
 </style>
