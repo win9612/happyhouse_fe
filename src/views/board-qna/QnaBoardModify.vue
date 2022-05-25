@@ -42,41 +42,42 @@ export default {
       article: {},
     };
   },
-  created: async function () {
+  mounted: function () {
     // 로그인 정보 확인
-    await this.checkLoginInfo();
     // 현재 글 정보 불러오기
-    await this.getCurrentBoardInfo();
+    this.checkLoginInfo();
   },
   methods: {
     checkLoginInfo() {
+      let _this = this;
       http
         .get(`/app/account/profile`)
         .then(({ data }) => {
           if (data.email === null || data.email.length < 1) {
             alert("로그인 후 글 수정이 가능합니다.");
-            this.$router.push({ name: "QnaBoardList" });
+            _this.$router.push({ name: "QnaBoardList" });
           }
-          this.emailForCheck = data.email;
+          _this.emailForCheck = data.email;
+        })
+        .then(() => {
+          // getCurrentBoardInfo()
+          http
+            .get(`/qna-board/getOne`, {
+              params: {
+                bNo: _this.$route.query.bno,
+              },
+            })
+            .then(({ data }) => {
+              if (_this.emailForCheck !== data.bWriterEmail) {
+                alert("글의 작성자만 수정할 수 있습니다.");
+                _this.$router.push({ name: "QnaBoardList" });
+              }
+              _this.article = data;
+            });
         })
         .catch(() => {
           alert("비정상적인 접근입니다.");
-          this.$router.push({ name: "QnaBoardList" });
-        });
-    },
-    getCurrentBoardInfo() {
-      http
-        .get(`/qna-board/getOne`, {
-          params: {
-            bNo: this.$route.query.bno,
-          },
-        })
-        .then(({ data }) => {
-          if (this.emailForCheck !== data.bWriterEmail) {
-            alert("글의 작성자만 수정할 수 있습니다.");
-            this.$router.push({ name: "QnaBoardList" });
-          }
-          this.article = data;
+          _this.$router.push({ name: "QnaBoardList" });
         });
     },
     moveList() {

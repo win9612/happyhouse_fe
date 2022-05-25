@@ -40,7 +40,7 @@
         </li>
         <li
           class="page-item"
-          v-if="page !== totalPage"
+          v-if="page !== totalPage && totalPage > 1"
           @click="moveAfterPage()"
         >
           <a class="page-link" href="#">다음</a>
