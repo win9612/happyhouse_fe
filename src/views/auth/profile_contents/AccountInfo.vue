@@ -182,35 +182,40 @@ export default {
           },
         })
         .then(({ data }) => {
-          if (data > 0) jogun2 = true;
-          else jogun2 = false;
-        });
-
-      if (jogun1) {
-        _this.passwordResultMsg = `<strong class="text-danger">현재 비밀번호를 1글자 이상 입력하세요.</strong>`;
-        return false;
-      } else if (jogun2) {
-        _this.passwordResultMsg = `<strong class="text-danger">현재 비밀번호가 일치하지 않습니다.</strong>`;
-        return false;
-      } else if (jogun3) {
-        _this.passwordResultMsg = `<strong class="text-danger">새 비밀번호는 6글자 이상 15글자 이하여야 합니다.</strong>`;
-        return false;
-      } else if (jogun4) {
-        _this.passwordResultMsg = `<strong class="text-danger">새 비밀번호가 일치하지 않습니다.</strong>`;
-        return false;
-      }
-      http
-        .put(`app/account/modify-password`, {
-          email: _this.email,
-          password: _this.newPassword1,
+          if (data > 0) jogun2 = false;
+          else jogun2 = true;
         })
         .then(() => {
-          alert("비밀번호가 성공적으로 변경되었습니다.");
-          _this.passwordResultMsg = "";
-          return true;
+          if (jogun1) {
+            _this.passwordResultMsg = `<strong class="text-danger">현재 비밀번호를 1글자 이상 입력하세요.</strong>`;
+            return false;
+          } else if (jogun2) {
+            _this.passwordResultMsg = `<strong class="text-danger">현재 비밀번호가 일치하지 않습니다.</strong>`;
+            return false;
+          } else if (jogun3) {
+            _this.passwordResultMsg = `<strong class="text-danger">새 비밀번호는 6글자 이상 15글자 이하여야 합니다.</strong>`;
+            return false;
+          } else if (jogun4) {
+            _this.passwordResultMsg = `<strong class="text-danger">새 비밀번호가 일치하지 않습니다.</strong>`;
+            return false;
+          }
+          http
+            .put(`app/account/modify-pw`, {
+              email: _this.email,
+              password: _this.newPassword1,
+            })
+            .then(() => {
+              alert("비밀번호가 성공적으로 변경되었습니다.");
+              _this.passwordResultMsg = "";
+              _this.$router.go();
+              return true;
+            })
+            .catch(() => {
+              alert("비밀번호 변경 중 문제가 발생했습니다.");
+            });
         })
         .catch(() => {
-          alert("비밀번호 변경 중 문제가 발생했습니다.");
+          console.log("에러 발생");
         });
     },
   },
