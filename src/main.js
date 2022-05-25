@@ -5,6 +5,7 @@ import store from "./store";
 import VueGeolocation from "vue-geolocation-api";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.js";
 
 Vue.config.productionTip = false;
 
