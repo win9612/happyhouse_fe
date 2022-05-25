@@ -400,7 +400,6 @@ export default {
     // 1일전 ~ 6일전 미세농도 데이터 불러오기
     for (let i = 1; i <= 6; i++) {
       let ago = _this.getDate();
-      console.log(ago);
       await http
         .get(`/airkorea/dust`, {
           params: {
