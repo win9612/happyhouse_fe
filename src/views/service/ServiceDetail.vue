@@ -48,10 +48,7 @@
           </div>
           <div class="dust_container">
             이 지역의 미세먼지 농도는
-            <span v-html="dustStatusMsg"></span> 입니다. (<span
-              v-html="dustInfo[0].dataTime"
-            ></span
-            >)
+            <span v-html="dustStatusMsg"></span> 입니다.
             <img :src="nowDustImg" alt="미세먼지 현황 이미지" />
           </div>
         </div>
