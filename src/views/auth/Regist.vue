@@ -164,6 +164,7 @@ export default {
                     params: {
                       email: resp.data.result.email,
                       password: resp.data.result.id,
+                      social: "kakao",
                     },
                   });
                 } else if (resp.data.result.accessToken) {
