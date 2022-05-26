@@ -14,7 +14,11 @@
     </div>
     <div align="right" class="menu_bar mb-1">
       <button class="btn btn-primary" @click="moveList">목록</button>
-      <button class="btn btn-info" v-if="ableModify" @click="moveModify">
+      <button
+        class="btn btn-outline-primary"
+        v-if="ableModify"
+        @click="moveModify"
+      >
         글 수정
       </button>
       <button class="btn btn-danger" v-if="ableDelete" @click="deleteArticle">

@@ -2,7 +2,9 @@
   <header class="">
     <nav class="navbar navbar-expand-lg navbar-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/">HAPPY HOUSE</a>
+        <a class="navbar-brand fw-bold" href="/"
+          ><i class="fa-solid fa-house-chimney"></i> HAPPY HOUSE</a
+        >
         <button
           class="navbar-toggler"
           type="button"

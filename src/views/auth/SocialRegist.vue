@@ -2,7 +2,7 @@
   <div class="container">
     <div class="login-wrapper">
       <div class="login-form-logo text-center">
-        <a href="/">HAPPY HOUSE</a>
+        <a href="/"><i class="fa-solid fa-house-chimney"></i> HAPPY HOUSE</a>
       </div>
       <div class="form-container text-start">
         <div class="text-center alert alert-primary">

@@ -8,8 +8,8 @@
           쉽고 간편하게
         </div>
         <div class="sub-title text-start text-reset">
-          여기는 부연설명을 적는데 두줄 정도 길게 꽉차게 적어야 이쁘게
-          레이아웃이 잡힐거 같다 나중에 채우자
+          지역추천을 통한 편한 지역찾기와 간단한 UI로 누구나 편하게 원하는
+          부동산 정보조회를 할수있습니다
         </div>
         <div class="btn-box d-grid gap-2 text-start">
           <a href="./service" class="btn btn-primary">조회하기</a>

@@ -40,6 +40,8 @@ export default {
 <style>
 .likeList-contents-container {
   margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
 }
 .like-post {
   cursor: pointer;
@@ -51,5 +53,10 @@ export default {
   box-sizing: border-box;
   padding: 10px;
   margin: 10px;
+}
+@media only screen and (max-width: 768px) {
+  .likeList-contents-container {
+    justify-content: center;
+  }
 }
 </style>

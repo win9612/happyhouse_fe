@@ -3,14 +3,14 @@
     <div class="input_form mt-5">
       <input
         disabled
-        type="text"
+        type="hidden"
         class="mb-3 w-100"
         v-model="bWriterEmail"
         placeholder="이메일"
       /><br />
       <input
         disabled
-        type="text"
+        type="hidden"
         class="mb-3 w-100"
         v-model="bWriterName"
         placeholder="이름"
@@ -30,8 +30,8 @@
         required
       /><br />
     </div>
-    <button class="btn btn-success" @click="addArticle">등록</button>
-    <button class="btn btn-primary" @click="moveList">목록</button>
+    <button class="btn btn-primary me-2" @click="addArticle">등록</button>
+    <button class="btn btn-outline-primary" @click="moveList">목록</button>
   </div>
 </template>
 

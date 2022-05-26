@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrapper text-center">
     <div class="login-form-logo">
-      <a href="/">HAPPY HOUSE</a>
+      <a href="/"><i class="fa-solid fa-house-chimney"></i> HAPPY HOUSE</a>
     </div>
     <div class="form-container">
       <input
@@ -36,14 +36,14 @@
       <img
         class="social-btn kakao"
         :src="require(`@/assets/images/kakao.png`)"
-        alt="집이미지"
+        alt="카카오"
         @click="kakaoLogin()"
       />
-      <img
+      <!-- <img
         class="social-btn naver"
         :src="require(`@/assets/images/naver.png`)"
         alt="집이미지"
-      />
+      /> -->
     </div>
   </div>
 </template>
