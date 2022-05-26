@@ -1,15 +1,58 @@
 <template>
+  <!-- 게시판 element 시작 -->
   <div class="qnaList-contents-container">
-    <div class="profile-notice-post">
-      <div class="profile-notice-title">제목입니다</div>
-      <div class="profile-notice-date">2022.05.06</div>
+    <div
+      class="profile-notice-post"
+      :id="item.bno"
+      v-for="(item, index) in qnaBoard"
+      :key="index"
+      @click="moveDetail(item.bNo)"
+    >
+      <div class="profile-notice-title">{{ item.bTitle }}</div>
+      <div class="profile-notice-date">{{ item.bWriteDate }}</div>
     </div>
   </div>
+  <!-- 게시판 element 끝 -->
 </template>
 
 <script>
+import http from "../../../api/http-common";
+
 export default {
   name: "QnaList",
+  data() {
+    return {
+      qnaBoard: [], // 게시글 목록
+      email: "",
+    };
+  },
+  created() {
+    this.getArticleList();
+  },
+  methods: {
+    getArticleList() {
+      let _this = this;
+      http
+        .get(`/app/account/profile`)
+        .then(({ data }) => {
+          _this.email = data.email;
+        })
+        .then(() => {
+          http
+            .get(`/qna-board/search-email`, {
+              params: {
+                email: _this.email,
+              },
+            })
+            .then(({ data }) => {
+              _this.qnaBoard = data.result.articleList;
+            });
+        });
+    },
+    moveDetail(bNo) {
+      this.$router.push({ name: "QnaBoardDetail", query: { bno: bNo } });
+    },
+  },
 };
 </script>
 
