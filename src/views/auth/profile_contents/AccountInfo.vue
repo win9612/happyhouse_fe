@@ -28,7 +28,7 @@
         </div>
         <div id="name_result_msg" v-html="nameResultMsg"></div>
       </div>
-      <div class="profile-row text-left">
+      <div class="profile-row text-left" v-if="local">
         <div class="profile-attr">비밀번호 변경</div>
         <div class="d-flex">
           <input
@@ -92,6 +92,7 @@ export default {
       enabledPass: false,
       nameResultMsg: "",
       passwordResultMsg: "",
+      local: false,
     };
   },
   methods: {
@@ -223,11 +224,13 @@ export default {
     let _this = this;
     // QnaBoard를 axios로 받아옴
     http.get(`/app/account/profile`).then(({ data }) => {
+      console.log(data);
       _this.profile = data;
       _this.currentName = data.name;
       _this.name = data.name;
       _this.email = data.email;
       _this.currentPassword = data.password;
+      _this.local = data.social == "local" ? true : false;
     });
   },
 };

@@ -64,6 +64,7 @@ export default {
       email: "",
       name: "",
       password: "",
+      social: "",
     };
   },
   methods: {
@@ -85,6 +86,7 @@ export default {
         email: this.email,
         name: this.name,
         password: this.password,
+        social: this.social,
       };
       return form;
     },
@@ -92,6 +94,7 @@ export default {
   created() {
     this.email = this.$route.params.email;
     this.password = this.$route.params.password;
+    this.social = this.$route.params.social;
   },
 };
 </script>
