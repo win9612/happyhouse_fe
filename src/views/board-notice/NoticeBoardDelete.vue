@@ -18,6 +18,7 @@ export default {
   },
   methods: {
     checkLoginInfo() {
+      let _this = this;
       http
         .get(`/notice-board/getOne`, {
           params: {
@@ -25,18 +26,16 @@ export default {
           },
         })
         .then(({ data }) => {
-          console.log("a : " + this.browsingUserEmail);
-          console.log("b : " + data.bWriterEmail);
-          if (this.browsingUserEmail !== data.bWriterEmail) {
+          if (_this.browsingUserEmail !== data.bWriterEmail) {
             alert("비정상적인 접근입니다.");
-            this.$router.push({ name: "NoticeBoardList" });
+            //this.$router.push({ name: "NoticeBoardList" });
             return;
           }
           this.deleteArticle();
         })
         .catch(() => {
           alert("비정상적인 접근입니다.");
-          this.$router.push({ name: "NoticeBoardList" });
+          //this.$router.push({ name: "NoticeBoardList" });
         });
     },
     deleteArticle() {

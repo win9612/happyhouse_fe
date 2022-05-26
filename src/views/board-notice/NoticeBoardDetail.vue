@@ -61,6 +61,7 @@ export default {
             this.ableModify = true;
             this.ableDelete = true;
           }
+          this.browsingUserEmail = data.email;
         })
         .catch((resp) => {
           console.log(resp); // ISSUE
