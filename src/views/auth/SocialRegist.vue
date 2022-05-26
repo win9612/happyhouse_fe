@@ -28,6 +28,7 @@
           v-model="email"
           type="text"
           placeholder="이메일 입력"
+          disabled
         />
         <div class="input-title">닉네임</div>
         <input
