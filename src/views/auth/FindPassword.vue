@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrapper text-center">
     <div class="login-form-logo">
-      <a href="/">HAPPY HOUSE</a>
+      <a href="/"><i class="fa-solid fa-house-chimney"></i> HAPPY HOUSE</a>
     </div>
     <strong class="alert-danger"
       >비밀번호를 찾기 위해 이메일과 이름을 입력해주세요.</strong

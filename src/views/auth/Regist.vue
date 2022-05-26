@@ -1,7 +1,7 @@
 <template>
-  <div class="login-wrapper">
+  <div class="regist-wrapper">
     <div class="login-form-logo text-center">
-      <a href="/">HAPPY HOUSE</a>
+      <a href="/"><i class="fa-solid fa-house-chimney"></i> HAPPY HOUSE</a>
     </div>
     <div class="form-container text-start">
       <div class="input-title">이메일</div>
@@ -190,7 +190,7 @@ export default {
 </script>
 
 <style>
-.login-wrapper {
+.regist-wrapper {
   position: relative;
   width: 100%;
   max-width: 560px;
